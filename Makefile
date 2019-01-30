@@ -1,9 +1,7 @@
-proj = "kc705-tmpl"
+proj = "hbe200"
 
 
 rtl_dir := rtl
-test_dir := test
-ip_catalog_dir := ip_catalog
 create_ip_dir := create_ip
 tcl_dir := scripts
 xdc_dir := constraints
@@ -61,7 +59,7 @@ generate_ipsrcs:
 	make -C $(create_ip_dir)/xlnx_ila
 	make -C $(create_ip_dir)/xlnx_clk_gen
 
-build_setup: generate_ipsrcs $(rtl_dir) $(test_dir) $(ip_catalog_dir) $(create_ip_dir) $(tcl_dir) $(xdc_dir)
+build_setup: generate_ipsrcs $(rtl_dir) $(create_ip_dir) $(tcl_dir) $(xdc_dir)
 
 prj: $(proj).xpr
 $(proj).xpr: build_setup
