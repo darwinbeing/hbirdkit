@@ -15,6 +15,9 @@ set device $::env(XILINX_PART)
 #create_project -part ${device} -in_memory
 create_project -name kc705-tmpl -force -part ${device}
 
+# set number of threads to 8 (maximum, unfortunately)
+set_param general.maxThreads 8
+
 set_property target_language Verilog [current_project]
 set_property default_lib work [current_project]
 #set_property verilog_define { {USE_DDR3_FIFO=1} {USE_XPHY=1} {USE_PVTMON=1} } [current_fileset]
