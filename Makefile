@@ -56,8 +56,9 @@ HW_SERVER := hw_server
 all: bitstream
 
 generate_ipsrcs:
-	make -C $(create_ip_dir)/xlnx_ila
-	make -C $(create_ip_dir)/xlnx_clk_gen
+	echo "xxx"
+	# make -C $(create_ip_dir)/xlnx_ila
+	# make -C $(create_ip_dir)/xlnx_clk_gen
 
 build_setup: generate_ipsrcs $(rtl_dir) $(create_ip_dir) $(tcl_dir) $(xdc_dir)
 

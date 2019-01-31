@@ -579,8 +579,7 @@ begin
         end if;
     end process;
 
-    --iLCR_WLS    <= iLCR(1 downto 0);
-    iLCR_WLS    <= "11";
+    iLCR_WLS    <= iLCR(1 downto 0);
     iLCR_STB    <= iLCR(2);
     iLCR_PEN    <= iLCR(3);
     iLCR_EPS    <= iLCR(4);
@@ -759,9 +758,8 @@ begin
 
 
     -- Baudrate generator
-    --iBaudgenDiv <= iDLM & iDLL;
-    iBaudgenDiv <= x"0011"; -- 33000000 / 16x 115200 = 18
-         UART_BG16: uart_baudgen port map (CLK         => CLK,
+    iBaudgenDiv <= iDLM & iDLL;
+    UART_BG16: uart_baudgen port map (CLK         => CLK,
                                       RST         => RST,
                                       CE          => BAUDCE,
                                       CLEAR       => '0',
@@ -1016,7 +1014,7 @@ begin
                 DTRN <= '1';
             end if;
             -- SOUT
-            if (iSOUT = '1') then
+            if (iMCR_LOOP = '1' or iSOUT = '1') then
                 SOUT <= '1';
             end if;
         end if;
