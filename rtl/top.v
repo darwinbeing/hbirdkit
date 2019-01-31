@@ -50,7 +50,6 @@ module top
     wire                      uart_int;
     reg                       s_wr_en;
     reg                       s_rd_en;
-    reg [3:0]                 nxt_state;
     reg [3:0]                 cur_state;
 
     localparam  STATE_UART_CONF_IDLE              = 0;
@@ -138,79 +137,108 @@ module top
     //     end
 
 
-    always @ (posedge clk_33M or negedge rstn) begin
-        if (~rstn) begin
-            cur_state <= STATE_UART_CONF_IDLE;
-            nxt_state <= STATE_UART_CONF_IDLE;
-        end else begin
-            cur_state <= nxt_state;
+  always @ (posedge clk_33M or negedge rstn) begin
+    if (~rstn) begin
+      cur_state <= STATE_UART_CONF_IDLE;
+    end else begin
+      case (cur_state)
+        STATE_UART_CONF_IDLE: begin
+          s_uart_addr <= 3'b0;
+          io_to_slave <= 8'h00;
+          s_uart_cs <= 1'b0;
+          s_wr_en <= 1'b0;
+          s_rd_en <=  1'b0;
+          cur_state <= STATE_UART_CONF_1;
         end
-    end
+        STATE_UART_CONF_1: begin
+          if(~s_uart_cs) begin
+            s_uart_addr <= UART_LCR;
+            io_to_slave <= 8'h83;
+            s_uart_cs <= 1'b1;
+          end else if(~s_wr_en) begin
+            s_wr_en <= 1'b1;
+          end else begin
+            s_wr_en <= 1'b0;
+            s_uart_cs <= 1'b0;
+            cur_state <= STATE_UART_CONF_2;
+          end
+        end
+        STATE_UART_CONF_2: begin
+          if(~s_uart_cs) begin
+            s_uart_addr <= UART_DLL;
+            io_to_slave <= 8'h11;
+            s_uart_cs <= 1'b1;
+          end else if(~s_wr_en) begin
+            s_wr_en <= 1'b1;
+          end else begin
+            s_wr_en <= 1'b0;
+            s_uart_cs <= 1'b0;
+            cur_state <= STATE_UART_CONF_3;
+          end
+        end
+        STATE_UART_CONF_3: begin
+          if(~s_uart_cs) begin
+            s_uart_addr <= UART_DLM;
+            io_to_slave <= 8'h00;
+            s_uart_cs <= 1'b1;
+          end else if(~s_wr_en) begin
+            s_wr_en <= 1'b1;
+          end else begin
+            s_wr_en <= 1'b0;
+            s_uart_cs <= 1'b0;
+            cur_state <= STATE_UART_CONF_4;
+          end
+        end
+        STATE_UART_CONF_4: begin
+          if(~s_uart_cs) begin
+            s_uart_addr <= UART_LCR;
+            io_to_slave <= 8'h03;
+            s_uart_cs <= 1'b1;
+          end else if(~s_wr_en) begin
+            s_wr_en <= 1'b1;
+          end else begin
+            s_wr_en <= 1'b0;
+            s_uart_cs <= 1'b0;
+            cur_state <= STATE_UART_CONF_5;
+          end
+        end
 
-    always @(*) begin
-        nxt_state = cur_state;
+        STATE_UART_CONF_5: begin
+          if(~s_uart_cs) begin
+            s_uart_addr <= UART_FCR;
+            io_to_slave <= 8'h81;
+            s_uart_cs <= 1'b1;
+          end else if(~s_wr_en) begin
+            s_wr_en <= 1'b1;
+          end else begin
+            s_wr_en <= 1'b0;
+            s_uart_cs <= 1'b0;
+            cur_state <= STATE_UART_CONF_6;
+          end
+        end
+        STATE_UART_CONF_6: begin
+          if(~s_uart_cs) begin
+            s_uart_addr <= UART_IER;
+            io_to_slave <= 8'h01;
+            s_uart_cs <= 1'b1;
+          end else if(~s_wr_en) begin
+            s_wr_en <= 1'b1;
+          end else begin
+            s_wr_en <= 1'b0;
+            s_uart_cs <= 1'b0;
+            s_uart_addr <= 3'b0;
+            s_uart_cs <= 1'b0;
+            cur_state <= STATE_UART_CONF_DONE;
+          end
+        end
+        default: begin
+          cur_state <= STATE_UART_CONF_DONE;
+        end
+      endcase // case (cur_state)
+    end // else: !if(~rstn)
 
-        case (cur_state)
-            STATE_UART_CONF_IDLE: begin
-                s_uart_addr = 3'b0;
-                s_uart_cs = 1'b0;
-                s_wr_en = 1'b0;
-                s_rd_en =  1'b0;
-                nxt_state = STATE_UART_CONF_1;
-            end
-            STATE_UART_CONF_1: begin
-                s_uart_addr = UART_LCR;
-                io_to_slave = 8'h83;
-                s_wr_en = 1'b1;
-                s_uart_cs = 1'b1;
-                nxt_state = STATE_UART_CONF_2;
-            end
-            STATE_UART_CONF_2: begin
-                s_uart_addr = UART_DLL;
-                io_to_slave = 8'h11;
-                s_wr_en = 1'b1;
-                s_uart_cs = 1'b1;
-                nxt_state = STATE_UART_CONF_3;
-            end
-            STATE_UART_CONF_3: begin
-                s_uart_addr = UART_DLM;
-                io_to_slave = 8'h00;
-                s_wr_en = 1'b1;
-                s_uart_cs = 1'b1;
-                nxt_state = STATE_UART_CONF_4;
-            end
-            STATE_UART_CONF_4: begin
-                s_uart_addr = UART_LCR;
-                io_to_slave = 8'h00;
-                s_wr_en = 1'b1;
-                s_uart_cs = 1'b1;
-                nxt_state = STATE_UART_CONF_5;
-            end
+  end // always @ (posedge clk_33M or negedge rstn)
 
-            STATE_UART_CONF_5: begin
-                s_uart_addr = UART_FCR;
-                io_to_slave = 8'h81;
-                s_wr_en = 1'b1;
-                s_uart_cs = 1'b1;
-                nxt_state = STATE_UART_CONF_6;
-            end
-            STATE_UART_CONF_6: begin
-                s_uart_addr = UART_IER;
-                io_to_slave = 8'h01;
-                s_wr_en = 1'b1;
-                s_uart_cs = 1'b1;
-                nxt_state = STATE_UART_CONF_DONE;
-            end
-            default: begin
-                s_uart_addr = 3'b0;
-                s_uart_cs = 1'b0;
-                s_wr_en = 1'b0;
-                s_rd_en =  1'b0;
-                nxt_state = STATE_UART_CONF_DONE;
-            end
-
-        endcase
-    end
 
     always @(posedge CLK100MHZ or negedge rstn)
         if(~rstn) begin
