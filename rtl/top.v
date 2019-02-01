@@ -51,8 +51,7 @@ module top
     wire                      uart_int;
     reg                       s_wr_en;
     reg                       s_rd_en;
-    reg [3:0]                 cur_conf_state;
-    reg [3:0]                 cur_rx_state;
+    reg [3:0]                 cur_state;
 
     localparam  STATE_UART_CONF_IDLE              = 0;
     localparam  STATE_UART_CONF_1             = 1;
@@ -63,10 +62,10 @@ module top
     localparam  STATE_UART_CONF_6            = 6;
     localparam  STATE_UART_CONF_DONE            = 7;
 
-    localparam  STATE_UART_READ_INIT              = 0;
-    localparam  STATE_UART_READ_LSR             = 1;
-    localparam  STATE_UART_READ_DATA             = 2;
-    localparam  STATE_UART_READ_DONE            = 3;
+    localparam  STATE_UART_READ_INIT              = 8;
+    localparam  STATE_UART_READ_LSR             = 9;
+    localparam  STATE_UART_READ_DATA             = 10;
+    localparam  STATE_UART_READ_DONE            = 11;
 
     localparam UART_RX  = 3'b000;
     localparam UART_TX  = 3'b000;
@@ -147,16 +146,16 @@ module top
   // 115200 8N1 FIFO(8) INT
   always @ (posedge clk_33M or negedge rstn) begin
     if (~rstn) begin
-      cur_conf_state <= STATE_UART_CONF_IDLE;
+      cur_state <= STATE_UART_CONF_IDLE;
     end else begin
-      case (cur_conf_state)
+      case (cur_state)
         STATE_UART_CONF_IDLE: begin
           s_uart_addr <= 3'b0;
           io_to_slave <= 8'h00;
           s_uart_cs <= 1'b0;
           s_wr_en <= 1'b0;
           s_rd_en <=  1'b0;
-          cur_conf_state <= STATE_UART_CONF_1;
+          cur_state <= STATE_UART_CONF_1;
         end
         STATE_UART_CONF_1: begin
           if(~s_uart_cs) begin
@@ -168,7 +167,7 @@ module top
           end else begin
             s_wr_en <= 1'b0;
             s_uart_cs <= 1'b0;
-            cur_conf_state <= STATE_UART_CONF_2;
+            cur_state <= STATE_UART_CONF_2;
           end
         end
         STATE_UART_CONF_2: begin
@@ -181,7 +180,7 @@ module top
           end else begin
             s_wr_en <= 1'b0;
             s_uart_cs <= 1'b0;
-            cur_conf_state <= STATE_UART_CONF_3;
+            cur_state <= STATE_UART_CONF_3;
           end
         end
         STATE_UART_CONF_3: begin
@@ -194,7 +193,7 @@ module top
           end else begin
             s_wr_en <= 1'b0;
             s_uart_cs <= 1'b0;
-            cur_conf_state <= STATE_UART_CONF_4;
+            cur_state <= STATE_UART_CONF_4;
           end
         end
         STATE_UART_CONF_4: begin
@@ -207,7 +206,7 @@ module top
           end else begin
             s_wr_en <= 1'b0;
             s_uart_cs <= 1'b0;
-            cur_conf_state <= STATE_UART_CONF_5;
+            cur_state <= STATE_UART_CONF_5;
           end
         end
 
@@ -221,7 +220,7 @@ module top
           end else begin
             s_wr_en <= 1'b0;
             s_uart_cs <= 1'b0;
-            cur_conf_state <= STATE_UART_CONF_6;
+            cur_state <= STATE_UART_CONF_6;
           end
         end
         STATE_UART_CONF_6: begin
@@ -236,27 +235,14 @@ module top
             s_uart_cs <= 1'b0;
             s_uart_addr <= 3'b0;
             s_uart_cs <= 1'b0;
-            cur_conf_state <= STATE_UART_CONF_DONE;
+            cur_state <= STATE_UART_READ_INIT;
           end
         end
-        default: begin
-          cur_conf_state <= STATE_UART_CONF_DONE;
-        end
-      endcase // case (cur_conf_state)
-    end // else: !if(~rstn)
-
-  end // always @ (posedge clk_33M or negedge rstn)
-
-  always @ (posedge clk_33M or negedge rstn) begin
-    if (~rstn) begin
-      cur_rx_state <= STATE_UART_READ_INIT;
-    end else if(cur_conf_state == STATE_UART_CONF_DONE) begin
-      case (cur_rx_state)
         STATE_UART_READ_INIT: begin
           s_uart_addr <= 3'b0;
           s_uart_cs <= 1'b0;
           s_rd_en <=  1'b0;
-          cur_rx_state <= STATE_UART_READ_LSR;
+          cur_state <= STATE_UART_READ_LSR;
         end
         STATE_UART_READ_LSR: begin
           if(~s_uart_cs) begin
@@ -268,7 +254,7 @@ module top
             s_rd_en <= 1'b0;
             s_uart_cs <= 1'b0;
             if(s_uart_out & UART_LSR_DR)
-              cur_rx_state <= STATE_UART_READ_DATA;
+              cur_state <= STATE_UART_READ_DATA;
           end
         end
         STATE_UART_READ_DATA: begin
@@ -281,17 +267,16 @@ module top
             s_rd_en <= 1'b0;
             s_uart_cs <= 1'b0;
             uart_rx_int <= s_uart_out;
-            cur_rx_state <= STATE_UART_READ_LSR;
+            cur_state <= STATE_UART_READ_LSR;
           end
         end
         default: begin
-          cur_rx_state <= STATE_UART_READ_INIT;
+          cur_state <= STATE_UART_CONF_IDLE;
         end
-      endcase // case (cur_rx_state)
+      endcase // case (cur_state)
     end // else: !if(~rstn)
 
   end // always @ (posedge clk_33M or negedge rstn)
-
 
     always @(posedge CLK100MHZ or negedge rstn)
         if(~rstn) begin
