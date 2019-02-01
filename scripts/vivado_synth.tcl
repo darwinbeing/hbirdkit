@@ -65,7 +65,7 @@ generate_target {synthesis simulation} [get_ips]
 #set_property steps.phys_opt_design.is_enabled true [get_runs impl_1]
 #set_property strategy Performance_Explore [get_runs impl_1]
 
-synth_design -name kc705-tmpl -part ${device} -top top
+synth_design -name hbe200 -part ${device} -top top
 
 opt_design
 
