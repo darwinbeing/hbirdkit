@@ -20,12 +20,12 @@
 -- Free Software  Foundation, Inc., 59 Temple Place, Suite 330,
 -- Boston, MA  02111-1307  USA
 --
- 
+
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
 USE IEEE.numeric_std.all;
- 
- 
+
+
 entity slib_fifo is
     generic (
         WIDTH       : integer := 8;                             -- FIFO width
@@ -44,7 +44,7 @@ entity slib_fifo is
         USAGE       : out std_logic_vector(SIZE_E-1 downto 0)   -- FIFO usage
     );
 end slib_fifo;
- 
+
 architecture rtl of slib_fifo is
     -- Signals
     signal iEMPTY   : std_logic;                                -- Internal EMPTY
@@ -55,12 +55,12 @@ architecture rtl of slib_fifo is
     -- FIFO memory
     type FIFO_Mem_Type is array (2**SIZE_E-1 downto 0) of std_logic_vector(WIDTH-1 downto 0);
     signal iFIFOMem : FIFO_Mem_Type := (others => (others => '0'));
- 
+
 begin
     -- Full signal (biggest difference of read and write address)
     iFULL <= '1' when (iRDAddr(SIZE_E-1 downto 0) = iWRAddr(SIZE_E-1 downto 0)) and
                       (iRDAddr(SIZE_E)           /= iWRAddr(SIZE_E)) else '0';
- 
+
     -- Write/read address counter and empty signal
     FF_ADDR: process (RST, CLK)
     begin
@@ -72,16 +72,16 @@ begin
             if (WRITE = '1' and iFULL = '0') then       -- Write to FIFO
                 iWRAddr <= iWRAddr + 1;
             end if;
- 
+
             if (READ = '1' and iEMPTY = '0') then       -- Read from FIFO
                 iRDAddr <= iRDAddr + 1;
             end if;
- 
+
             if (CLEAR = '1') then                       -- Reset FIFO
                 iWRAddr <= (others => '0');
                 iRDAddr <= (others => '0');
             end if;
- 
+
             if (iRDAddr = iWRAddr) then                 -- Empty signal (read address same as write address)
                 iEMPTY <= '1';
             else
@@ -89,7 +89,7 @@ begin
             end if;
         end if;
     end process;
- 
+
     -- FIFO memory process
     FF_MEM: process (RST, CLK)
     begin
@@ -99,10 +99,12 @@ begin
             if (WRITE = '1' and iFULL = '0') then
                 iFIFOMem(to_integer(iWRAddr(SIZE_E-1 downto 0))) <= D;
             end if;
-            Q <= iFIFOMem(to_integer(iRDAddr(SIZE_E-1 downto 0)));
+            if (READ = '1' and iEMPTY = '0') then
+              Q <= iFIFOMem(to_integer(iRDAddr(SIZE_E-1 downto 0)));
+            end if;
         end if;
     end process;
- 
+
     -- Usage counter
     FF_USAGE: process (RST, CLK)
     begin
@@ -121,10 +123,10 @@ begin
             end if;
         end if;
     end process;
- 
+
     -- Output signals
     EMPTY <= iEMPTY;
     FULL  <= iFULL;
     USAGE <= std_logic_vector(iUSAGE);
- 
+
 end rtl;
