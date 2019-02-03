@@ -63,7 +63,6 @@ foreach file ${IP_SRC} {
 	# set_property GENERATE_SYNTH_CHECKPOINT FALSE [get_files ${file}]
 }
 
-close_project
 generate_target {synthesis simulation} [get_ips]
 
 #set_property strategy Flow_PerfOptimized_High [get_runs synth_1]

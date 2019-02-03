@@ -684,7 +684,8 @@ begin
     iLSR(5)         <= iLSR_THRE;
     iLSR(6)         <= iLSR_TEMT;
     iLSR(7)         <= '1' when iFCR_FIFOEnable = '1' and iLSR_FIFOERR = '1' else '0';
-    iLSR_DR         <= '1' when iRXFIFOEmpty = '0' or iRXFIFOWrite = '1' else '0';
+    --iLSR_DR         <= '1' when iRXFIFOEmpty = '0' or iRXFIFOWrite = '1' else '0';
+    iLSR_DR         <= '1' when iRXFIFOEmpty = '0' else '0';
     iLSR_THRE       <= '1' when iTXFIFOEmpty = '1' else '0';
     iLSR_TEMT       <= '1' when iTXRunning = '0' and iLSR_THRE = '1' else '0';
 
@@ -1041,7 +1042,8 @@ begin
             when "101"  =>  DOUT <= iLSR;
             when "110"  =>  DOUT <= iMSR;
             when "111"  =>  DOUT <= iSCR;
-            when others =>  DOUT <= iRBR;
+            --when others =>  DOUT <= iRBR;
+            when others =>  null;
         end case;
     end process;
 

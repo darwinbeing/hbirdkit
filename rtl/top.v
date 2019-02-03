@@ -43,7 +43,7 @@ module top
    wire                      s_baudout;
    reg [2:0]                 s_uart_addr;
    reg                       s_uart_cs;
-   wire [7:0]                s_uart_out;
+   wire [7:0]                 s_uart_out;
    reg [7:0]                 uart_rx_int;
    wire                      uart_int;
    reg                       s_wr_en;
@@ -51,6 +51,7 @@ module top
    reg [3:0]                 cur_state;
    reg                       dout;
    reg [7:0]                 s_uart_out_int;
+   reg                        got_data;
 
    localparam  STATE_UART_CONF_IDLE         = 0;
    localparam  STATE_UART_CONF_1            = 1;
@@ -63,7 +64,8 @@ module top
    localparam  STATE_UART_READ_INIT         = 8;
    localparam  STATE_UART_READ_LSR          = 9;
    localparam  STATE_UART_READ_DATA         = 10;
-   localparam  STATE_UART_READ_DONE         = 11;
+   localparam  STATE_UART_DATA_WAIT         = 11;
+   localparam  STATE_UART_READ_DONE         = 12;
 
    localparam UART_RX  = 3'b000;
    localparam UART_TX  = 3'b000;
@@ -111,7 +113,7 @@ module top
      (
       .clk(CLK100MHZ), // input wire clk
       .probe0(clk_33M), // input wire [0:0]  probe0
-      .probe1(io_to_slave), // input wire [7:0]  probe1
+      .probe1(uart_rx_int), // input wire [7:0]  probe1
       .probe2(s_uart_out), // input wire [7:0]  probe2
       .probe3(rstn), // input wire [0:0]  probe3
       .probe4(uart_int), // input wire [0:0]  probe4
@@ -144,7 +146,6 @@ module top
       end else begin
          case (cur_state)
            STATE_UART_CONF_IDLE: begin
-              s_uart_addr <= 3'b0;
               io_to_slave <= 8'h00;
               s_uart_cs <= 1'b0;
               s_wr_en <= 1'b0;
@@ -207,7 +208,7 @@ module top
            STATE_UART_CONF_5: begin
               if(~s_uart_cs) begin
                  s_uart_addr <= UART_FCR;
-                 io_to_slave <= 8'h81;
+                 io_to_slave <= 8'h00;
                  s_uart_cs <= 1'b1;
               end else if(~s_wr_en) begin
                  s_wr_en <= 1'b1;
@@ -227,18 +228,17 @@ module top
               end else begin
                  s_wr_en <= 1'b0;
                  s_uart_cs <= 1'b0;
-                 s_uart_addr <= 3'b0;
                  s_uart_cs <= 1'b0;
                  cur_state <= STATE_UART_READ_INIT;
               end
            end
            STATE_UART_READ_INIT: begin
-              s_uart_addr <= 3'b0;
               s_uart_cs <= 1'b0;
               s_rd_en <=  1'b0;
               cur_state <= STATE_UART_READ_LSR;
            end
            STATE_UART_READ_LSR: begin
+              got_data <= 1'b0;
               if(~s_uart_cs) begin
                  s_uart_addr <= UART_LSR;
                  s_uart_cs <= 1'b1;
@@ -256,6 +256,7 @@ module top
               end
            end
            STATE_UART_READ_DATA: begin
+              got_data <= 1'b0;
               if(~s_uart_cs) begin
                  s_uart_addr <= UART_RX;
                  s_uart_cs <= 1'b1;
@@ -263,13 +264,16 @@ module top
                  s_rd_en <= 1'b1;
                  dout <= 1'b1;
               end else if(dout) begin
-                 uart_rx_int <= s_uart_out;
                  dout <= 1'b0;
               end else begin
                  s_rd_en <= 1'b0;
                  s_uart_cs <= 1'b0;
-                 cur_state <= STATE_UART_READ_LSR;
+                 cur_state <= STATE_UART_DATA_WAIT;
               end
+           end
+           STATE_UART_DATA_WAIT: begin
+              got_data <= 1'b1;
+               cur_state <= STATE_UART_READ_LSR;
            end
            default: begin
               cur_state <= STATE_UART_CONF_IDLE;
@@ -278,12 +282,20 @@ module top
       end // else: !if(~rstn)
    end // always @ (posedge clk_33M or negedge rstn)
 
-   always @(posedge CLK100MHZ or negedge rstn)
+   always @(posedge clk_33M or negedge rstn)
+     if(~rstn) begin
+        uart_rx_int <= 8'h00;
+     end else begin
+        if(got_data) begin
+           uart_rx_int <= s_uart_out;;
+        end
+     end
+
+   always @(posedge clk_33M or negedge rstn)
      if(~rstn) begin
         led8 <= 1'b0;
         led9 <= 1'b0;
         led10 <= 1'b0;
-        uart_rx_int <= 8'h00;
      end else if(uart_rx_int == 8'h20) begin
         led8 <= 1'b1;
         led9 <= 1'b1;
