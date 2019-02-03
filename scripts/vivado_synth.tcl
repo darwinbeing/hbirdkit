@@ -12,7 +12,11 @@ set design top
 set device $::env(XILINX_PART)
 
 # Project Settings
-create_project -part ${device} -in_memory
+# create_project -part ${device} -in_memory
+create_project -name hbe200 -force -part ${device}
+
+# set number of threads to 8 (maximum, unfortunately)
+set_param general.maxThreads 8
 
 set_property target_language Verilog [current_project]
 set_property default_lib work [current_project]
