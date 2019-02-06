@@ -31,13 +31,18 @@ module top
    wire                      clk_33M;
    wire                      pll_locked;
 
+  IBUF CLK100MHZ_IBUF_inst
+       (.I(CLK100MHZ),
+        .O(CLK100MHZ_IBUF));
+
+
    xlnx_clk_gen xlnx_clk_gen_inst
      (
       .clk_out1(clk_50M),
       .clk_out2(clk_33M),
       .resetn(rstn),
       .locked(pll_locked),
-      .clk_in1(CLK100MHZ));
+      .clk_in1(CLK100MHZ_IBUF));
 
    reg [7:0]                 io_to_slave;
    wire                      s_baudout;
@@ -83,6 +88,7 @@ module top
    localparam UART_MCR_LOOP  = 8'h10;
    localparam UART_LSR_DR    = 8'h01;
 
+
    uart_16750 uart_inst
      (
       .clk(clk_33M),
@@ -108,36 +114,6 @@ module top
       .rin(),
       .sin(uart0_rxd),
       .sout(uart0_txd));
-
-   xlnx_ila xlnx_ila_inst
-     (
-      .clk(CLK100MHZ), // input wire clk
-      .probe0(clk_33M), // input wire [0:0]  probe0
-      .probe1(uart_rx_int), // input wire [7:0]  probe1
-      .probe2(s_uart_out), // input wire [7:0]  probe2
-      .probe3(rstn), // input wire [0:0]  probe3
-      .probe4(uart_int), // input wire [0:0]  probe4
-      .probe5(s_baudout), // input wire [0:0]  probe5
-      .probe6(uart0_rxd), // input wire [0:0]  probe6
-      .probe7(uart0_txd) // input wire [0:0]  probe7
-      );
-
-   //    vio_0 vio_0_inst (
-   //          .clk(clk_33M),                // input wire clk
-   //          .probe_in0(s_uart_out),    // input wire [7 : 0] probe_in0
-   //          .probe_in1(uart0_rxd),    // input wire [0 : 0] probe_in1
-   //          .probe_in2(uart0_txd),    // input wire [0 : 0] probe_in2
-   //          .probe_out0(io_to_slave),  // output wire [7 : 0] probe_out0
-   //          .probe_out1(s_wr_en),  // output wire [0 : 0] probe_out1
-   //          .probe_out2(s_rd_en)  // output wire [0 : 0] probe_out2
-   //        );
-
-   // always @(posedge CLK100MHZ or negedge rstn)
-   //     if(~rstn) begin
-   //         cnt <= 1'b0;
-   //     end else begin
-   //         cnt <= cnt + 1;
-   //     end
 
    // 115200 8N1 FIFO(8) INT
    always @ (posedge clk_33M or negedge rstn) begin
