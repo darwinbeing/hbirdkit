@@ -326,6 +326,10 @@ architecture rtl of uart_16750 is
     signal iRXFIFOClear     : std_logic;                        -- Clear RX FIFO
     signal iRXFIFOWrite     : std_logic;                        -- Write to RX FIFO
     signal iRXFIFORead      : std_logic;                        -- Read from RX FIFO
+
+    attribute keep : string;
+    attribute keep of iRXFIFORead : signal is "true";
+
     signal iRXFIFOEmpty     : std_logic;                        -- RX FIFO is empty
     signal iRXFIFOFull      : std_logic;                        -- RX FIFO is full
     signal iRXFIFO16Full    : std_logic;                        -- RX FIFO 16 byte mode is full
