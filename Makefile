@@ -25,6 +25,8 @@ RTL_SRC := \
         rtl/uart/uart_receiver.vhd \
         rtl/uart/uart_transmitter.vhd
 
+TB_SRC := \
+        testbench/test_hbe200.v \
 
 
 XDC_SRC := \
@@ -94,3 +96,9 @@ ila:
 ila2:
 	test -e csv || mkdir csv
 	vivado -mode batch -source scripts/vivado_ila2.tcl -tclargs "`cat $(HW_SERVER)`"
+
+sim:
+	vivado -mode batch -source scripts/sim.tcl -log sim_log.txt -nojournal -tclargs "$(PKG_SRC) $(RTL_SRC_NOSIM) $(RTL_SRC_IPGEN) $(RTL_SRC)" "$(IP_SRC_IPGEN)" "$(XDC_SRC)" "$(TB_SRC)"
+
+clean:
+	@rm -rf *.os *.jou *.log *.txt *.dcp *.html *.xml *.str
