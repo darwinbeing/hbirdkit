@@ -39,12 +39,6 @@ TCL_SRC := \
         scripts/vivado_route.tcl      \
         scripts/vivado_bitstream.tcl
 
-IP_SRC := \
-        ip_catalog/ila_0/ila_0.xci                           \
-        ip_catalog/pcie_afifo/pcie_afifo.xci                 \
-        ip_catalog/eth_afifo/eth_afifo.xci                   \
-        ip_catalog/axi_10g_ethernet_0/axi_10g_ethernet_0.xci
-
 IP_SRC_IPGEN := \
         create_ip/xlnx_clk_gen/ip/xlnx_clk_gen.xci
 
@@ -97,8 +91,9 @@ ila2:
 	test -e csv || mkdir csv
 	vivado -mode batch -source scripts/vivado_ila2.tcl -tclargs "`cat $(HW_SERVER)`"
 
-sim:
+sim: $(create_ip_dir)/xlnx_clk_gen/ip/xlnx_clk_gen.xci
 	vivado -mode batch -source scripts/sim.tcl -log sim_log.txt -nojournal -tclargs "$(PKG_SRC) $(RTL_SRC_NOSIM) $(RTL_SRC_IPGEN) $(RTL_SRC)" "$(IP_SRC_IPGEN)" "$(XDC_SRC)" "$(TB_SRC)"
 
 clean:
 	@rm -rf *.os *.jou *.log *.txt *.dcp *.html *.xml *.str
+	@rm -rf *.cache *.hw *.ip_user_files *.sim

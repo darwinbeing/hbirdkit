@@ -70,7 +70,8 @@ module top
    localparam  STATE_UART_READ_LSR          = 9;
    localparam  STATE_UART_READ_DATA         = 10;
    localparam  STATE_UART_DATA_WAIT         = 11;
-   localparam  STATE_UART_READ_DONE         = 12;
+   localparam  STATE_UART_WRITE_DATA        = 12;
+   localparam  STATE_UART_LOOP              = 13;
 
    localparam UART_RX  = 3'b000;
    localparam UART_TX  = 3'b000;
@@ -87,7 +88,7 @@ module top
 
    localparam UART_MCR_LOOP  = 8'h10;
    localparam UART_LSR_DR    = 8'h01;
-
+   localparam UART_LSR_THRE  = 8'h20;
 
    uart_16750 uart_inst
      (
@@ -197,7 +198,7 @@ module top
            STATE_UART_CONF_6: begin
               if(~s_uart_cs) begin
                  s_uart_addr <= UART_IER;
-                 io_to_slave <= 8'h01;
+                 io_to_slave <= 8'h03;
                  s_uart_cs <= 1'b1;
               end else if(~s_wr_en) begin
                  s_wr_en <= 1'b1;
@@ -227,8 +228,17 @@ module top
               end else begin
                  s_rd_en <= 1'b0;
                  s_uart_cs <= 1'b0;
+
                  if(s_uart_out_int & UART_LSR_DR)
                    cur_state <= STATE_UART_READ_DATA;
+                 else if(s_uart_out_int & UART_LSR_THRE) begin
+                    cur_state <= STATE_UART_WRITE_DATA;
+                 end
+
+                 // if(s_uart_out_int & UART_LSR_THRE) begin
+                 //    cur_state <= STATE_UART_WRITE_DATA;
+                 // end
+
               end
            end
            STATE_UART_READ_DATA: begin
@@ -250,6 +260,21 @@ module top
            STATE_UART_DATA_WAIT: begin
               got_data <= 1'b1;
                cur_state <= STATE_UART_READ_LSR;
+           end
+           STATE_UART_WRITE_DATA: begin
+              if(~s_uart_cs) begin
+                 s_uart_addr <= UART_TX;
+                 io_to_slave <= 8'h31;
+                 s_uart_cs <= 1'b1;
+              end else if(~s_wr_en) begin
+                 s_wr_en <= 1'b1;
+              end else begin
+                 s_wr_en <= 1'b0;
+                 s_uart_cs <= 1'b0;
+                 cur_state <= STATE_UART_READ_LSR;
+              end
+           end
+           STATE_UART_LOOP: begin
            end
            default: begin
               cur_state <= STATE_UART_CONF_IDLE;

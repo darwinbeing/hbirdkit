@@ -5,7 +5,7 @@
 `define CLOCK_PERIOD 10
 
 module test_hbe200();
-    localparam RESET_LEVEL = 1'b1;
+    localparam RESET_LEVEL = 1'b0;
     // Declare inputs as regs and outputs as wires
    reg CLK100MHZ;
    reg fpga_rst;
@@ -30,7 +30,7 @@ module test_hbe200();
         fpga_rst = ~RESET_LEVEL;
         mcu_rst = ~RESET_LEVEL;
 
-        #2000 $finish;      // Terminate simulation
+        // #2000 $finish;      // Terminate simulation
     end
 
     // Clock generator

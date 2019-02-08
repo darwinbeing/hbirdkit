@@ -94,4 +94,17 @@ launch_simulation
 
 start_gui
 
+# add_wave /test_hbe200/mytop/CLK100MHZ_IBUF
+# add_wave /test_hbe200/mytop/clk_50M
+# add_wave /test_hbe200/mytop/clk_33M
+# add_wave /test_hbe200/mytop/rstn
+# add_wave /test_hbe200/mytop/pll_locked
+# add_wave /test_hbe200/mytop/CLK100MHZ_IBUF
+
+open_wave_config test_hbe200_behav.wcfg
+
+restart
+
+run 10us
+
 #close_project

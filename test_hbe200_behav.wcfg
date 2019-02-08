@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="test_hbe200_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="test_hbe200" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="100400000001fs"></ZoomEndTime>
+      <Cursor1Time time="100000000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="175"></NameColumnWidth>
+      <ValueColumnWidth column_width="110"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="18" />
+   <wvobject type="logic" fp_name="/test_hbe200/CLK100MHZ">
+      <obj_property name="ElementShortName">CLK100MHZ</obj_property>
+      <obj_property name="ObjectShortName">CLK100MHZ</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/pll_locked">
+      <obj_property name="ElementShortName">pll_locked</obj_property>
+      <obj_property name="ObjectShortName">pll_locked</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/rstn">
+      <obj_property name="ElementShortName">rstn</obj_property>
+      <obj_property name="ObjectShortName">rstn</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/clk_33M">
+      <obj_property name="ElementShortName">clk_33M</obj_property>
+      <obj_property name="ObjectShortName">clk_33M</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/s_uart_cs">
+      <obj_property name="ElementShortName">s_uart_cs</obj_property>
+      <obj_property name="ObjectShortName">s_uart_cs</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/s_wr_en">
+      <obj_property name="ElementShortName">s_wr_en</obj_property>
+      <obj_property name="ObjectShortName">s_wr_en</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/s_rd_en">
+      <obj_property name="ElementShortName">s_rd_en</obj_property>
+      <obj_property name="ObjectShortName">s_rd_en</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test_hbe200/mytop/s_uart_addr">
+      <obj_property name="ElementShortName">s_uart_addr[2:0]</obj_property>
+      <obj_property name="ObjectShortName">s_uart_addr[2:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test_hbe200/mytop/io_to_slave">
+      <obj_property name="ElementShortName">io_to_slave[7:0]</obj_property>
+      <obj_property name="ObjectShortName">io_to_slave[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test_hbe200/mytop/s_uart_out">
+      <obj_property name="ElementShortName">s_uart_out[7:0]</obj_property>
+      <obj_property name="ObjectShortName">s_uart_out[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart0_rxd">
+      <obj_property name="ElementShortName">uart0_rxd</obj_property>
+      <obj_property name="ObjectShortName">uart0_rxd</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart0_txd">
+      <obj_property name="ElementShortName">uart0_txd</obj_property>
+      <obj_property name="ObjectShortName">uart0_txd</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/UART_TX/TXSTART">
+      <obj_property name="ElementShortName">TXSTART</obj_property>
+      <obj_property name="ObjectShortName">TXSTART</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/test_hbe200/mytop/uart_inst/UART_TX/CState">
+      <obj_property name="ElementShortName">CState</obj_property>
+      <obj_property name="ObjectShortName">CState</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/test_hbe200/mytop/uart_inst/UART_TX/NState">
+      <obj_property name="ElementShortName">NState</obj_property>
+      <obj_property name="ObjectShortName">NState</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/UART_TX/iSout">
+      <obj_property name="ElementShortName">iSout</obj_property>
+      <obj_property name="ObjectShortName">iSout</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/UART_TX/iTx2">
+      <obj_property name="ElementShortName">iTx2</obj_property>
+      <obj_property name="ObjectShortName">iTx2</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/UART_TX/STB">
+      <obj_property name="ElementShortName">STB</obj_property>
+      <obj_property name="ObjectShortName">STB</obj_property>
+   </wvobject>
+</wave_config>
