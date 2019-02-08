@@ -12,14 +12,14 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="100400000001fs"></ZoomEndTime>
+      <ZoomEndTime time="105438433294fs"></ZoomEndTime>
       <Cursor1Time time="100000000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="175"></NameColumnWidth>
-      <ValueColumnWidth column_width="110"></ValueColumnWidth>
+      <ValueColumnWidth column_width="106"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="18" />
+   <WVObjectSize size="17" />
    <wvobject type="logic" fp_name="/test_hbe200/CLK100MHZ">
       <obj_property name="ElementShortName">CLK100MHZ</obj_property>
       <obj_property name="ObjectShortName">CLK100MHZ</obj_property>
@@ -75,10 +75,6 @@
    <wvobject type="other" fp_name="/test_hbe200/mytop/uart_inst/UART_TX/CState">
       <obj_property name="ElementShortName">CState</obj_property>
       <obj_property name="ObjectShortName">CState</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/test_hbe200/mytop/uart_inst/UART_TX/NState">
-      <obj_property name="ElementShortName">NState</obj_property>
-      <obj_property name="ObjectShortName">NState</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/UART_TX/iSout">
       <obj_property name="ElementShortName">iSout</obj_property>

@@ -31,6 +31,12 @@ module top
    wire                      clk_33M;
    wire                      pll_locked;
 
+   reg tx_data_avail        ; // Indicate valid TXD Data available
+   reg [7:0] tx_data              ; // TXD Data to be transmited
+   reg [16*8-1:0] TxMsgBuf           ; // 16 Byte Tx Message Buffer
+   reg [4:0]      TxMsgSize          ;
+
+
   IBUF CLK100MHZ_IBUF_inst
        (.I(CLK100MHZ),
         .O(CLK100MHZ_IBUF));
@@ -123,6 +129,11 @@ module top
       end else begin
          case (cur_state)
            STATE_UART_CONF_IDLE: begin
+
+              TxMsgBuf      <= "Command Format\r\n";  // Align to 16 character format by appending space character
+              TxMsgSize     <= 16;
+              tx_data_avail <= 1;
+
               io_to_slave <= 8'h00;
               s_uart_cs <= 1'b0;
               s_wr_en <= 1'b0;
@@ -232,12 +243,19 @@ module top
                  if(s_uart_out_int & UART_LSR_DR)
                    cur_state <= STATE_UART_READ_DATA;
                  else if(s_uart_out_int & UART_LSR_THRE) begin
+
+                    tx_data_avail    <= 1;
+                    tx_data          <= TxMsgBuf[16*8-1:15*8];
+                    if(TxMsgSize == 0) begin
+                       TxMsgBuf      <= "Command Format\r\n";
+                       TxMsgSize     <= 16;
+                    end else begin
+                       TxMsgBuf      <= TxMsgBuf << 8;
+                       TxMsgSize     <= TxMsgSize -1;
+                    end
+
                     cur_state <= STATE_UART_WRITE_DATA;
                  end
-
-                 // if(s_uart_out_int & UART_LSR_THRE) begin
-                 //    cur_state <= STATE_UART_WRITE_DATA;
-                 // end
 
               end
            end
@@ -264,7 +282,7 @@ module top
            STATE_UART_WRITE_DATA: begin
               if(~s_uart_cs) begin
                  s_uart_addr <= UART_TX;
-                 io_to_slave <= 8'h31;
+                 io_to_slave <= tx_data;
                  s_uart_cs <= 1'b1;
               end else if(~s_wr_en) begin
                  s_wr_en <= 1'b1;

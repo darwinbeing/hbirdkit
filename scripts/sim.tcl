@@ -105,6 +105,6 @@ open_wave_config test_hbe200_behav.wcfg
 
 restart
 
-run 10us
+run 5ms
 
 #close_project
