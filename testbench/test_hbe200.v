@@ -13,7 +13,7 @@ module test_hbe200();
    wire led8;
    wire led9;
    wire led10;
-   wire uart0_rxd;
+   reg uart0_rxd;
    wire uart0_txd;
 
     // Initialize all variables
@@ -21,6 +21,7 @@ module test_hbe200();
         $monitor ("%g\t %b %b %b",
               $time, CLK100MHZ, uart0_rxd, uart0_txd);
         CLK100MHZ = 1;
+       uart0_rxd = 1;
         fpga_rst = ~RESET_LEVEL;
         mcu_rst = ~RESET_LEVEL;
        repeat (2) @ (negedge CLK100MHZ);

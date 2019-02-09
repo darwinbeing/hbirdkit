@@ -12,14 +12,14 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="105438433294fs"></ZoomEndTime>
-      <Cursor1Time time="100000000000fs"></Cursor1Time>
+      <ZoomEndTime time="1724000000001fs"></ZoomEndTime>
+      <Cursor1Time time="0fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="175"></NameColumnWidth>
-      <ValueColumnWidth column_width="106"></ValueColumnWidth>
+      <ValueColumnWidth column_width="102"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="17" />
+   <WVObjectSize size="23" />
    <wvobject type="logic" fp_name="/test_hbe200/CLK100MHZ">
       <obj_property name="ElementShortName">CLK100MHZ</obj_property>
       <obj_property name="ObjectShortName">CLK100MHZ</obj_property>
@@ -87,5 +87,29 @@
    <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/UART_TX/STB">
       <obj_property name="ElementShortName">STB</obj_property>
       <obj_property name="ObjectShortName">STB</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart0_rxd">
+      <obj_property name="ElementShortName">uart0_rxd</obj_property>
+      <obj_property name="ObjectShortName">uart0_rxd</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test_hbe200/mytop/uart_inst/iLSR">
+      <obj_property name="ElementShortName">iLSR[7:0]</obj_property>
+      <obj_property name="ObjectShortName">iLSR[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/iRXFIFOEmpty">
+      <obj_property name="ElementShortName">iRXFIFOEmpty</obj_property>
+      <obj_property name="ObjectShortName">iRXFIFOEmpty</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/iRXFIFOWrite">
+      <obj_property name="ElementShortName">iRXFIFOWrite</obj_property>
+      <obj_property name="ObjectShortName">iRXFIFOWrite</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/iRXFinished">
+      <obj_property name="ElementShortName">iRXFinished</obj_property>
+      <obj_property name="ObjectShortName">iRXFinished</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/UART_RX/SIN">
+      <obj_property name="ElementShortName">SIN</obj_property>
+      <obj_property name="ObjectShortName">SIN</obj_property>
    </wvobject>
 </wave_config>
