@@ -1,9 +1,13 @@
-open_checkpoint post_syn.dcp
+open_checkpoint post_opt.dcp
 
-opt_design
+# Place the current design
+place_design -directive Explore
+
+# Optimize the current placed netlist
+phys_opt_design -directive Explore
+
+# Optimize dynamic power using intelligent clock gating
 power_opt_design
-place_design
 
-report_utilization -file post_place_util.txt
-report_timing -file post_place_timing.txt -nworst 5
+# Checkpoint the current design
 write_checkpoint -force post_place

@@ -65,8 +65,12 @@ synth: post_syn.dcp
 post_syn.dcp: build_setup
 	vivado -mode batch -source scripts/vivado_synth.tcl -log syn_log.txt -nojournal -tclargs "$(PKG_SRC) $(RTL_SRC_NOSIM) $(RTL_SRC_IPGEN) $(RTL_SRC)" "$(IP_SRC_IPGEN)" "$(XDC_SRC)"
 
+opt: post_opt.dcp
+post_opt.dcp: post_syn.dcp
+	vivado -mode batch -source scripts/vivado_opt.tcl -log opt_log.txt -nojournal
+
 place: post_place.dcp
-post_place.dcp: post_syn.dcp
+post_place.dcp: post_opt.dcp
 	vivado -mode batch -source scripts/vivado_place.tcl -log place_log.txt -nojournal
 
 route: post_route.dcp

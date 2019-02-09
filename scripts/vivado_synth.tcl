@@ -72,8 +72,8 @@ generate_target {synthesis simulation} [get_ips]
 synth_design -name hbe200 -part ${device} -top top -flatten_hierarchy rebuilt
 # synth_design -name hbe200 -part ${device} -top top -flatten_hierarchy none
 
-opt_design
+# opt_design
 
-report_utilization -file post_syn_util.txt
-report_timing -sort_by group -max_paths 5 -path_type summary -file post_synth_timing.txt
+# report_utilization -file post_syn_util.txt
+# report_timing -sort_by group -max_paths 5 -path_type summary -file post_synth_timing.txt
 write_checkpoint -force post_syn
