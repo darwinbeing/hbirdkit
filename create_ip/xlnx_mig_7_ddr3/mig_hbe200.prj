@@ -18,7 +18,7 @@
     <dci_hr_inouts_inputs>50 Ohms</dci_hr_inouts_inputs>
     <dci_cascade>0</dci_cascade>
     <Controller number="0" >
-        <MemoryDevice>DDR3_SDRAM/Components/MT41K128M16XX-15E</MemoryDevice>
+        <MemoryDevice>DDR3_SDRAM/Components/MT41K256M16XX-125</MemoryDevice>
         <TimePeriod>2500</TimePeriod>
         <VccAuxIO>1.8V</VccAuxIO>
         <PHYRatio>4:1</PHYRatio>
@@ -35,10 +35,9 @@
         <DataMask>1</DataMask>
         <ECC>Disabled</ECC>
         <Ordering>Normal</Ordering>
-        <BankMachineCnt>4</BankMachineCnt>
         <CustomPart>FALSE</CustomPart>
         <NewPartName></NewPartName>
-        <RowAddress>14</RowAddress>
+        <RowAddress>15</RowAddress>
         <ColAddress>10</ColAddress>
         <BankAddress>3</BankAddress>
         <MemoryVoltage>1.5V</MemoryVoltage>
@@ -49,6 +48,7 @@
             <Pin VCCAUX_IO="" IOSTANDARD="SSTL15" PADName="W2" SLEW="" name="ddr3_addr[11]" IN_TERM="" />
             <Pin VCCAUX_IO="" IOSTANDARD="SSTL15" PADName="Y2" SLEW="" name="ddr3_addr[12]" IN_TERM="" />
             <Pin VCCAUX_IO="" IOSTANDARD="SSTL15" PADName="U1" SLEW="" name="ddr3_addr[13]" IN_TERM="" />
+            <Pin VCCAUX_IO="" IOSTANDARD="SSTL15" PADName="V3" SLEW="" name="ddr3_addr[14]" IN_TERM="" />
             <Pin VCCAUX_IO="" IOSTANDARD="SSTL15" PADName="AB2" SLEW="" name="ddr3_addr[1]" IN_TERM="" />
             <Pin VCCAUX_IO="" IOSTANDARD="SSTL15" PADName="AA5" SLEW="" name="ddr3_addr[2]" IN_TERM="" />
             <Pin VCCAUX_IO="" IOSTANDARD="SSTL15" PADName="AB5" SLEW="" name="ddr3_addr[3]" IN_TERM="" />
@@ -124,11 +124,11 @@
             <Pin PADName="No connect" Bank="Select Bank" name="tg_compare_error" />
         </System_Control>
         <TimingParameters>
-            <Parameters twtr="7.5" trrd="7.5" trefi="7.8" tfaw="45" trtp="7.5" tcke="5.625" trfc="160" trp="13.5" tras="36" trcd="13.5" />
+            <Parameters twtr="7.5" trrd="7.5" trefi="7.8" tfaw="40" trtp="7.5" tcke="5" trfc="260" trp="13.75" tras="35" trcd="13.75" />
         </TimingParameters>
         <mrBurstLength name="Burst Length" >8 - Fixed</mrBurstLength>
         <mrBurstType name="Read Burst Type and Length" >Sequential</mrBurstType>
-        <mrCasLatency name="CAS Latency" >5</mrCasLatency>
+        <mrCasLatency name="CAS Latency" >6</mrCasLatency>
         <mrMode name="Mode" >Normal</mrMode>
         <mrDllReset name="DLL Reset" >No</mrDllReset>
         <mrPdMode name="DLL control for precharge PD" >Slow Exit</mrPdMode>
