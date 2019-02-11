@@ -1,14 +1,68 @@
 `timescale 1ns/1ps
 
-module top(CLK100MHZ, fpga_rst, mcu_rst, led8, led9, led10, uart0_rxd, uart0_txd);
+module top(CLK100MHZ, fpga_rst, mcu_rst, led8, led9, led10, uart0_rxd, uart0_txd,
+           ddr3_dq, ddr3_dqs_n, ddr3_dqs_p, ddr3_addr,
+  ddr3_ba, ddr3_ras_n, ddr3_cas_n, ddr3_we_n, ddr3_reset_n, ddr3_ck_p, ddr3_ck_n, ddr3_cke,
+  ddr3_cs_n, ddr3_dm, ddr3_odt, sys_clk_p, sys_clk_n
+);
    input CLK100MHZ;
    input fpga_rst;
    input mcu_rst;
    output reg led8;
    output reg led9;
-   output reg led10;
+   output     led10;
    input      uart0_rxd;
    output     uart0_txd;
+
+  inout [31:0]ddr3_dq;
+  inout [3:0]ddr3_dqs_n;
+  inout [3:0]ddr3_dqs_p;
+  output [13:0]ddr3_addr;
+  output [2:0]ddr3_ba;
+  output ddr3_ras_n;
+  output ddr3_cas_n;
+  output ddr3_we_n;
+  output ddr3_reset_n;
+  output [0:0]ddr3_ck_p;
+  output [0:0]ddr3_ck_n;
+  output [0:0]ddr3_cke;
+  output [0:0]ddr3_cs_n;
+  output [3:0]ddr3_dm;
+  output [0:0]ddr3_odt;
+  input sys_clk_p;
+  input sys_clk_n;
+
+  reg [27:0]app_addr;
+  reg [2:0]app_cmd;
+  reg app_en;
+  reg [255:0]app_wdf_data;
+  wire app_wdf_end = 1;
+  wire [31:0]app_wdf_mask = 0;
+  reg app_wdf_wren;
+  wire [255:0]app_rd_data;
+  wire app_rd_data_end;
+  wire app_rd_data_valid;
+  wire app_rdy;
+  wire app_wdf_rdy;
+  wire app_sr_req = 0;
+  wire app_ref_req = 0;
+  wire app_zq_req = 0;
+  wire app_sr_active;
+  wire app_ref_ack;
+  wire app_zq_ack;
+  wire ui_clk;
+  wire ui_clk_sync_rst;
+  wire calib_done;
+  wire sys_rst;
+
+   reg [127:0] data_to_write = {32'hcafebabe, 32'h12345678,
+                                32'hAA55AA55, 32'h55AA55AA};
+   reg [127:0] data_read_from_memory = 128'd0;
+
+   // reg  led_pass;
+   // reg  led_fail;
+   // wire led_calib;
+
    wire       rstn;
    wire       clk_50M;
    wire       clk_33M;
@@ -62,13 +116,11 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led8, led9, led10, uart0_rxd, uart0_txd
    localparam UART_LSR_DR    = 8'h01;
    localparam UART_LSR_THRE  = 8'h20;
 
-
    assign rstn = fpga_rst & mcu_rst;
 
    IBUF CLK100MHZ_IBUF_inst
      (.I(CLK100MHZ),
       .O(CLK100MHZ_IBUF));
-
 
    xlnx_clk_gen xlnx_clk_gen_inst
      (
@@ -78,54 +130,49 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led8, led9, led10, uart0_rxd, uart0_txd
       .locked(pll_locked),
       .clk_in1(CLK100MHZ_IBUF));
 
+   assign sys_rst = rstn;
 
-  xlnx_mig_7_ddr3 u_xlnx_mig_7_ddr3 (
-
-    // Memory interface ports
-    .ddr3_addr                      (ddr3_addr),  // output [13:0]      ddr3_addr
-    .ddr3_ba                        (ddr3_ba),  // output [2:0]     ddr3_ba
-    .ddr3_cas_n                     (ddr3_cas_n),  // output            ddr3_cas_n
-    .ddr3_ck_n                      (ddr3_ck_n),  // output [0:0]       ddr3_ck_n
-    .ddr3_ck_p                      (ddr3_ck_p),  // output [0:0]       ddr3_ck_p
-    .ddr3_cke                       (ddr3_cke),  // output [0:0]        ddr3_cke
-    .ddr3_ras_n                     (ddr3_ras_n),  // output            ddr3_ras_n
-    .ddr3_reset_n                   (ddr3_reset_n),  // output          ddr3_reset_n
-    .ddr3_we_n                      (ddr3_we_n),  // output         ddr3_we_n
-    .ddr3_dq                        (ddr3_dq),  // inout [31:0]     ddr3_dq
-    .ddr3_dqs_n                     (ddr3_dqs_n),  // inout [3:0]       ddr3_dqs_n
-    .ddr3_dqs_p                     (ddr3_dqs_p),  // inout [3:0]       ddr3_dqs_p
-    .init_calib_complete            (init_calib_complete),  // output           init_calib_complete
-
-    .ddr3_cs_n                      (ddr3_cs_n),  // output [0:0]       ddr3_cs_n
-    .ddr3_dm                        (ddr3_dm),  // output [3:0]     ddr3_dm
-    .ddr3_odt                       (ddr3_odt),  // output [0:0]        ddr3_odt
-    // Application interface ports
-    .app_addr                       (app_addr),  // input [27:0]        app_addr
-    .app_cmd                        (app_cmd),  // input [2:0]      app_cmd
-    .app_en                         (app_en),  // input             app_en
-    .app_wdf_data                   (app_wdf_data),  // input [255:0]       app_wdf_data
-    .app_wdf_end                    (app_wdf_end),  // input                app_wdf_end
-    .app_wdf_wren                   (app_wdf_wren),  // input               app_wdf_wren
-    .app_rd_data                    (app_rd_data),  // output [255:0]       app_rd_data
-    .app_rd_data_end                (app_rd_data_end),  // output           app_rd_data_end
-    .app_rd_data_valid              (app_rd_data_valid),  // output         app_rd_data_valid
-    .app_rdy                        (app_rdy),  // output           app_rdy
-    .app_wdf_rdy                    (app_wdf_rdy),  // output           app_wdf_rdy
-    .app_sr_req                     (app_sr_req),  // input         app_sr_req
-    .app_ref_req                    (app_ref_req),  // input            app_ref_req
-    .app_zq_req                     (app_zq_req),  // input         app_zq_req
-    .app_sr_active                  (app_sr_active),  // output         app_sr_active
-    .app_ref_ack                    (app_ref_ack),  // output           app_ref_ack
-    .app_zq_ack                     (app_zq_ack),  // output            app_zq_ack
-    .ui_clk                         (ui_clk),  // output            ui_clk
-    .ui_clk_sync_rst                (ui_clk_sync_rst),  // output           ui_clk_sync_rst
-    .app_wdf_mask                   (app_wdf_mask),  // input [31:0]        app_wdf_mask
-    // System Clock Ports
-    .sys_clk_p                       (sys_clk_p),  // input             sys_clk_p
-    .sys_clk_n                       (sys_clk_n),  // input             sys_clk_n
-    .sys_rst                        (sys_rst) // input sys_rst
-    );
-
+  xlnx_mig_7_ddr3 u_xlnx_mig_7_ddr3
+    (
+    .ddr3_addr                      (ddr3_addr),
+    .ddr3_ba                        (ddr3_ba),
+    .ddr3_cas_n                     (ddr3_cas_n),
+    .ddr3_ck_n                      (ddr3_ck_n),
+    .ddr3_ck_p                      (ddr3_ck_p),
+    .ddr3_cke                       (ddr3_cke),
+    .ddr3_ras_n                     (ddr3_ras_n),
+    .ddr3_reset_n                   (ddr3_reset_n),
+    .ddr3_we_n                      (ddr3_we_n),
+    .ddr3_dq                        (ddr3_dq),
+    .ddr3_dqs_n                     (ddr3_dqs_n),
+    .ddr3_dqs_p                     (ddr3_dqs_p),
+    .init_calib_complete            (calib_done),
+    .ddr3_cs_n                      (ddr3_cs_n),
+    .ddr3_dm                        (ddr3_dm),
+    .ddr3_odt                       (ddr3_odt),
+    .app_addr                       (app_addr),
+    .app_cmd                        (app_cmd),
+    .app_en                         (app_en),
+    .app_wdf_data                   (app_wdf_data),
+    .app_wdf_end                    (app_wdf_end),
+    .app_wdf_wren                   (app_wdf_wren),
+    .app_rd_data                    (app_rd_data),
+    .app_rd_data_end                (app_rd_data_end),
+    .app_rd_data_valid              (app_rd_data_valid),
+    .app_rdy                        (app_rdy),
+    .app_wdf_rdy                    (app_wdf_rdy),
+    .app_sr_req                     (app_sr_req),
+    .app_ref_req                    (app_ref_req),
+    .app_zq_req                     (app_zq_req),
+    .app_sr_active                  (app_sr_active),
+    .app_ref_ack                    (app_ref_ack),
+    .app_zq_ack                     (app_zq_ack),
+    .ui_clk                         (ui_clk),
+    .ui_clk_sync_rst                (ui_clk_sync_rst),
+    .app_wdf_mask                   (app_wdf_mask),
+    .sys_clk_p                       (sys_clk_p),
+    .sys_clk_n                       (sys_clk_n),
+    .sys_rst                        (sys_rst));
 
    uart_16750 uart_inst
      (
@@ -327,18 +374,99 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led8, led9, led10, uart0_rxd, uart0_txd
       end
    end
 
-   always @(posedge clk_33M or negedge rstn)
-     if(~rstn) begin
-        led8 <= 1'b0;
-        led9 <= 1'b0;
-        led10 <= 1'b0;
-     end else if(rx_data == 8'h20) begin
-        led8 <= 1'b1;
-        led9 <= 1'b1;
-        led10 <= 1'b1;
-     end else begin
-        led8 <= 1'b0;
-        led9 <= 1'b0;
-        led10 <= 1'b0;
-     end
+   // always @(posedge clk_33M or negedge rstn)
+   //   begin
+   //      if(~rstn) begin
+   //         led8 <= 1'b0;
+   //         led9 <= 1'b0;
+   //         led10 <= 1'b0;
+   //      end else if(rx_data == 8'h20) begin
+   //         led8 <= 1'b1;
+   //         led9 <= 1'b1;
+   //         led10 <= 1'b1;
+   //      end else begin
+   //         led8 <= 1'b0;
+   //         led9 <= 1'b0;
+   //         led10 <= 1'b0;
+   //      end
+   //   end
+
+   localparam IDLE = 3'd0;
+   localparam WRITE = 3'd1;
+   localparam WRITE_DONE = 3'd2;
+   localparam READ = 3'd3;
+   localparam READ_DONE = 3'd4;
+   localparam PARK = 3'd5;
+   reg [2:0] state = IDLE;
+
+   localparam CMD_WRITE = 3'b000;
+   localparam CMD_READ = 3'b001;
+
+   // assign led_calib = calib_done;
+   assign led10 = calib_done;
+
+   always @ (posedge ui_clk) begin
+      if (ui_clk_sync_rst) begin
+         state <= IDLE;
+         app_en <= 0;
+         app_wdf_wren <= 0;
+      end else begin
+         case (state)
+           IDLE: begin
+              if (calib_done) begin
+                 state <= WRITE;
+              end
+           end
+           WRITE: begin
+              if (app_rdy & app_wdf_rdy) begin
+                 state <= WRITE_DONE;
+                 app_en <= 1;
+                 app_wdf_wren <= 1;
+                 app_addr <= 0;
+                 app_cmd <= CMD_WRITE;
+                 app_wdf_data <= data_to_write;
+              end
+           end
+           WRITE_DONE: begin
+              if (app_rdy & app_en) begin
+                 app_en <= 0;
+              end
+              if (app_wdf_rdy & app_wdf_wren) begin
+                 app_wdf_wren <= 0;
+              end
+              if (~app_en & ~app_wdf_wren) begin
+                 state <= READ;
+              end
+           end
+           READ: begin
+              if (app_rdy) begin
+                 app_en <= 1;
+                 app_addr <= 0;
+                 app_cmd <= CMD_READ;
+                 state <= READ_DONE;
+              end
+           end
+           READ_DONE: begin
+              if (app_rdy & app_en) begin
+                 app_en <= 0;
+              end
+              if (app_rd_data_valid) begin
+                 data_read_from_memory <= app_rd_data;
+                 state <= PARK;
+              end
+           end
+           PARK: begin
+              if (data_to_write == data_read_from_memory) begin
+                 // led_pass <= 1;
+                 led9 <= 1;
+              end else if (data_to_write != data_read_from_memory) begin
+                 // led_fail <= 1;
+                 led8 <= 1;
+              end
+           end
+           default: state <= IDLE;
+         endcase
+      end
+   end
+
 endmodule
