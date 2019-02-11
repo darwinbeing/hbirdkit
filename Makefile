@@ -40,7 +40,8 @@ TCL_SRC := \
         scripts/vivado_bitstream.tcl
 
 IP_SRC_IPGEN := \
-        create_ip/xlnx_clk_gen/ip/xlnx_clk_gen.xci
+        create_ip/xlnx_clk_gen/ip/xlnx_clk_gen.xci \
+	create_ip/xlnx_mig_7_ddr3/ip/xlnx_mig_7_ddr3.xci
 
 CREATE_IP_SRC := \
         create_ip/xlnx_ila/Makefile         \
@@ -50,10 +51,13 @@ HW_SERVER := hw_server
 
 all: bitstream
 
+$(create_ip_dir)/xlnx_mig_7_ddr3/ip/xlnx_mig_7_ddr3.xci:
+	make -C $(create_ip_dir)/xlnx_mig_7_ddr3
+
 $(create_ip_dir)/xlnx_clk_gen/ip/xlnx_clk_gen.xci:
 	make -C $(create_ip_dir)/xlnx_clk_gen
 
-generate_ipsrcs: $(create_ip_dir)/xlnx_clk_gen/ip/xlnx_clk_gen.xci
+generate_ipsrcs: $(create_ip_dir)/xlnx_clk_gen/ip/xlnx_clk_gen.xci $(create_ip_dir)/xlnx_mig_7_ddr3/ip/xlnx_mig_7_ddr3.xci
 
 build_setup: generate_ipsrcs $(rtl_dir) $(create_ip_dir) $(tcl_dir) $(xdc_dir)
 
