@@ -30,7 +30,8 @@ TB_SRC := \
 
 
 XDC_SRC := \
-        constraints/top.xdc
+        constraints/top.xdc \
+        constraints/debug.xdc
 
 TCL_SRC := \
         scripts/vivado_createprj.tcl  \

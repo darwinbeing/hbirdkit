@@ -17,47 +17,46 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led8, led9, led10, uart0_rxd, uart0_txd
   inout [31:0]ddr3_dq;
   inout [3:0]ddr3_dqs_n;
   inout [3:0]ddr3_dqs_p;
-  output [13:0]ddr3_addr;
+  output [14:0]ddr3_addr;
   output [2:0]ddr3_ba;
   output ddr3_ras_n;
   output ddr3_cas_n;
   output ddr3_we_n;
   output ddr3_reset_n;
-  output [0:0]ddr3_ck_p;
-  output [0:0]ddr3_ck_n;
-  output [0:0]ddr3_cke;
-  output [0:0]ddr3_cs_n;
+  output ddr3_ck_p;
+  output ddr3_ck_n;
+  output ddr3_cke;
+  output ddr3_cs_n;
   output [3:0]ddr3_dm;
-  output [0:0]ddr3_odt;
+  output ddr3_odt;
   input sys_clk_p;
   input sys_clk_n;
 
-  reg [27:0]app_addr;
+  reg [28:0]app_addr;
   reg [2:0]app_cmd;
-  reg app_en;
-  reg [255:0]app_wdf_data;
+  (* keep = "true" *) reg app_en;
+  (* keep = "true" *) reg [255:0]app_wdf_data;
   wire app_wdf_end = 1;
   wire [31:0]app_wdf_mask = 0;
-  reg app_wdf_wren;
-  wire [255:0]app_rd_data;
+   (* keep = "true" *) reg app_wdf_wren;
+   (* keep = "true" *) wire [255:0]app_rd_data;
   wire app_rd_data_end;
-  wire app_rd_data_valid;
-  wire app_rdy;
-  wire app_wdf_rdy;
+  (* keep = "true" *) wire app_rd_data_valid;
+  (* keep = "true" *) wire app_rdy;
+  (* keep = "true" *) wire app_wdf_rdy;
   wire app_sr_req = 0;
   wire app_ref_req = 0;
   wire app_zq_req = 0;
   wire app_sr_active;
   wire app_ref_ack;
   wire app_zq_ack;
-  wire ui_clk;
+  (* keep = "true" *) wire ui_clk;
   wire ui_clk_sync_rst;
-  wire calib_done;
+   (* keep = "true" *) wire calib_done;
   wire sys_rst;
 
-   reg [127:0] data_to_write = {32'hcafebabe, 32'h12345678,
-                                32'hAA55AA55, 32'h55AA55AA};
-   reg [127:0] data_read_from_memory = 128'd0;
+   reg [255:0] data_to_write = {32'hcafebabe, 32'h12345678, 32'hAA55AA55, 32'h55AA55AA, 32'hdeadbeef, 32'h87654321, 32'h55AA55AA, 32'hAA55AA55};
+   reg [255:0] data_read_from_memory = 256'd0;
 
    // reg  led_pass;
    // reg  led_fail;
@@ -397,7 +396,7 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led8, led9, led10, uart0_rxd, uart0_txd
    localparam READ = 3'd3;
    localparam READ_DONE = 3'd4;
    localparam PARK = 3'd5;
-   reg [2:0] state = IDLE;
+   (* keep = "true" *) reg [2:0] state = IDLE;
 
    localparam CMD_WRITE = 3'b000;
    localparam CMD_READ = 3'b001;
