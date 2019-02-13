@@ -10,7 +10,7 @@
     <XADC_En>Enabled</XADC_En>
     <TargetFPGA>xc7a100t-fgg484/-2</TargetFPGA>
     <Version>4.1</Version>
-    <SystemClock>Differential</SystemClock>
+    <SystemClock>No Buffer</SystemClock>
     <ReferenceClock>Use System Clock</ReferenceClock>
     <SysResetPolarity>ACTIVE LOW</SysResetPolarity>
     <BankSelectionFlag>FALSE</BankSelectionFlag>
@@ -116,9 +116,6 @@
             <Pin VCCAUX_IO="" IOSTANDARD="LVCMOS15" PADName="W6" SLEW="FAST" name="ddr3_reset_n" IN_TERM="" />
             <Pin VCCAUX_IO="" IOSTANDARD="SSTL15" PADName="AA1" SLEW="FAST" name="ddr3_we_n" IN_TERM="" />
         </PinSelection>
-        <System_Clock>
-            <Pin PADName="R4/T4(CC_P/N)" Bank="34" name="sys_clk_p/n" />
-        </System_Clock>
         <System_Control>
             <Pin PADName="No connect" Bank="Select Bank" name="sys_rst" />
             <Pin PADName="No connect" Bank="Select Bank" name="init_calib_complete" />

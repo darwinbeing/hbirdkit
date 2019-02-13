@@ -1,16 +1,18 @@
 `timescale 1ns/1ps
 
-module top(CLK100MHZ, fpga_rst, mcu_rst, led8, led9, led10, uart0_rxd, uart0_txd,
+module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart0_rxd, uart0_txd,
            ddr3_dq, ddr3_dqs_n, ddr3_dqs_p, ddr3_addr,
   ddr3_ba, ddr3_ras_n, ddr3_cas_n, ddr3_we_n, ddr3_reset_n, ddr3_ck_p, ddr3_ck_n, ddr3_cke,
-  ddr3_cs_n, ddr3_dm, ddr3_odt, sys_clk_p, sys_clk_n
+  ddr3_cs_n, ddr3_dm, ddr3_odt
 );
    input CLK100MHZ;
    input fpga_rst;
    input mcu_rst;
-   output reg led8;
-   output reg led9;
-   output     led10;
+
+   output  led_pass;
+   output  led_fail;
+   output led_calib;
+
    input      uart0_rxd;
    output     uart0_txd;
 
@@ -29,8 +31,6 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led8, led9, led10, uart0_rxd, uart0_txd
   output ddr3_cs_n;
   output [3:0]ddr3_dm;
   output ddr3_odt;
-  input sys_clk_p;
-  input sys_clk_n;
 
   reg [28:0]app_addr;
   reg [2:0]app_cmd;
@@ -58,13 +58,14 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led8, led9, led10, uart0_rxd, uart0_txd
    reg [255:0] data_to_write = {32'hcafebabe, 32'h12345678, 32'hAA55AA55, 32'h55AA55AA, 32'hdeadbeef, 32'h87654321, 32'h55AA55AA, 32'hAA55AA55};
    reg [255:0] data_read_from_memory = 256'd0;
 
-   // reg  led_pass;
-   // reg  led_fail;
-   // wire led_calib;
+   reg  led_pass;
+   reg  led_fail;
+   wire led_calib;
 
    wire       rstn;
    wire       clk_50M;
    wire       clk_33M;
+   wire       sys_clk;
    wire       pll_locked;
    reg        tx_data_avail;
    reg [7:0]  tx_data;
@@ -125,6 +126,7 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led8, led9, led10, uart0_rxd, uart0_txd
      (
       .clk_out1(clk_50M),
       .clk_out2(clk_33M),
+      .clk_out3(sys_clk),
       .resetn(rstn),
       .locked(pll_locked),
       .clk_in1(CLK100MHZ_IBUF));
@@ -169,8 +171,7 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led8, led9, led10, uart0_rxd, uart0_txd
     .ui_clk                         (ui_clk),
     .ui_clk_sync_rst                (ui_clk_sync_rst),
     .app_wdf_mask                   (app_wdf_mask),
-    .sys_clk_p                       (sys_clk_p),
-    .sys_clk_n                       (sys_clk_n),
+    .sys_clk_i                      (sys_clk),
     .sys_rst                        (sys_rst));
 
    uart_16750 uart_inst
@@ -373,23 +374,6 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led8, led9, led10, uart0_rxd, uart0_txd
       end
    end
 
-   // always @(posedge clk_33M or negedge rstn)
-   //   begin
-   //      if(~rstn) begin
-   //         led8 <= 1'b0;
-   //         led9 <= 1'b0;
-   //         led10 <= 1'b0;
-   //      end else if(rx_data == 8'h20) begin
-   //         led8 <= 1'b1;
-   //         led9 <= 1'b1;
-   //         led10 <= 1'b1;
-   //      end else begin
-   //         led8 <= 1'b0;
-   //         led9 <= 1'b0;
-   //         led10 <= 1'b0;
-   //      end
-   //   end
-
    localparam IDLE = 3'd0;
    localparam WRITE = 3'd1;
    localparam WRITE_DONE = 3'd2;
@@ -401,8 +385,7 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led8, led9, led10, uart0_rxd, uart0_txd
    localparam CMD_WRITE = 3'b000;
    localparam CMD_READ = 3'b001;
 
-   // assign led_calib = calib_done;
-   assign led10 = calib_done;
+   assign led_calib = calib_done;
 
    always @ (posedge ui_clk) begin
       if (ui_clk_sync_rst) begin
@@ -456,11 +439,9 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led8, led9, led10, uart0_rxd, uart0_txd
            end
            PARK: begin
               if (data_to_write == data_read_from_memory) begin
-                 // led_pass <= 1;
-                 led9 <= 1;
+                 led_pass <= 1;
               end else if (data_to_write != data_read_from_memory) begin
-                 // led_fail <= 1;
-                 led8 <= 1;
+                 led_fail <= 1;
               end
            end
            default: state <= IDLE;
