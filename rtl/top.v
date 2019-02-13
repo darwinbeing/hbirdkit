@@ -468,4 +468,35 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led8, led9, led10, uart0_rxd, uart0_txd
       end
    end
 
+
+   wire probe0;
+   wire probe1;
+   wire probe2;
+   wire probe3;
+   wire probe4;
+   wire probe5;
+   wire [255:0] probe6;
+   wire [255:0] probe7;
+
+   xlnx_ila xlnx_ila_0 (
+                                .clk(ui_clk), // input wire clk
+                                .probe0(probe0), // input wire [0:0]  probe0
+                                .probe1(probe1), // input wire [0:0]  probe1
+                                .probe2(probe2), // input wire [0:0]  probe2
+                                .probe3(probe3), // input wire [0:0]  probe3
+                                .probe4(probe4), // input wire [0:0]  probe4
+                                .probe5(probe5), // input wire [0:0]  probe5
+                                .probe6(probe6), // input wire [256:0]  probe6
+                                .probe7(probe7) // input wire [256:0]  probe7
+                                );
+
+   assign probe0 = app_en;
+   assign probe1 = calib_done;
+   assign probe2 = app_wdf_wren;
+   assign probe3 = app_rdy;
+   assign probe4 = app_wdf_rdy;
+   assign probe5 = state;
+   assign probe6 = app_wdf_data;
+   assign probe7 = app_rd_data;
+
 endmodule
