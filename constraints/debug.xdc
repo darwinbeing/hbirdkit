@@ -1,8 +1,3 @@
-
-# set_property SEVERITY {Warning} [get_drc_checks LUTLP-1]
-# set_property SEVERITY {Warning} [get_drc_checks NSTD-1]
-# set_property SEVERITY {Warning} [get_drc_checks UCIO-1]
-
 # set_property MARK_DEBUG true [get_nets clk_33M]
 # set_property MARK_DEBUG true [get_nets CLK100MHZ_IBUF]
 # set_property MARK_DEBUG true [get_nets {uart_inst/A[1]}]
