@@ -108,5 +108,9 @@ sim: $(create_ip_dir)/xlnx_clk_gen/ip/xlnx_clk_gen.xci
 	vivado -mode batch -source scripts/sim.tcl -log sim_log.txt -nojournal -tclargs "$(PKG_SRC) $(RTL_SRC_NOSIM) $(RTL_SRC_IPGEN) $(RTL_SRC)" "$(IP_SRC_IPGEN)" "$(XDC_SRC)" "$(TB_SRC)"
 
 clean:
+	make -C $(create_ip_dir)/xlnx_mig_7_ddr3 clean
+	make -C $(create_ip_dir)/xlnx_clk_gen clean
+	make -C $(create_ip_dir)/xlnx_ila clean
+
 	@rm -rf *.os *.jou *.log *.txt *.dcp *.html *.xml *.str
 	@rm -rf *.cache *.hw *.ip_user_files *.sim
