@@ -94,8 +94,8 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
    wire          led_calib;
 
    wire          rstn;
-   wire          clk_50m;
-   wire          clk_30m;
+   (* keep = "true" *) wire          clk_50m;
+   wire          clk_33m;
    wire          clk_200m;
    wire          pll_locked;
    reg           tx_data_avail;
@@ -124,7 +124,7 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
    xlnx_clk_gen u_clk
      (
       .clk_out1(clk_50m),
-      .clk_out2(clk_30m),
+      .clk_out2(clk_33m),
       .clk_out3(clk_200m),
       .resetn(resetn),
       .locked(pll_locked),
@@ -173,7 +173,7 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
 
    uart_16750 u_uart
      (
-      .clk(clk_30m),
+      .clk(clk_33m),
       .rst(~resetn),
       .baudce(1'b1),
       .cs(s_uart_cs),
@@ -198,7 +198,7 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
       .sout(uart_tx));
 
    // 115200 8N1 FIFO(8) INT
-   always @ (posedge clk_30m or negedge resetn) begin
+   always @ (posedge clk_33m or negedge resetn) begin
       if (~resetn) begin
          current_state <= STATE_UART_CFG_IDLE;
       end else begin

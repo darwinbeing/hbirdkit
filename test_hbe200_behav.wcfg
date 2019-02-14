@@ -32,9 +32,9 @@
       <obj_property name="ElementShortName">rstn</obj_property>
       <obj_property name="ObjectShortName">rstn</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/test_hbe200/mytop/clk_33M">
-      <obj_property name="ElementShortName">clk_33M</obj_property>
-      <obj_property name="ObjectShortName">clk_33M</obj_property>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/clk_33m">
+      <obj_property name="ElementShortName">clk_33m</obj_property>
+      <obj_property name="ObjectShortName">clk_33m</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/test_hbe200/mytop/s_uart_cs">
       <obj_property name="ElementShortName">s_uart_cs</obj_property>
@@ -68,23 +68,23 @@
       <obj_property name="ElementShortName">uart0_txd</obj_property>
       <obj_property name="ObjectShortName">uart0_txd</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/UART_TX/TXSTART">
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/u_uart/UART_TX/TXSTART">
       <obj_property name="ElementShortName">TXSTART</obj_property>
       <obj_property name="ObjectShortName">TXSTART</obj_property>
    </wvobject>
-   <wvobject type="other" fp_name="/test_hbe200/mytop/uart_inst/UART_TX/CState">
+   <wvobject type="other" fp_name="/test_hbe200/mytop/u_uart/UART_TX/CState">
       <obj_property name="ElementShortName">CState</obj_property>
       <obj_property name="ObjectShortName">CState</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/UART_TX/iSout">
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/u_uart/UART_TX/iSout">
       <obj_property name="ElementShortName">iSout</obj_property>
       <obj_property name="ObjectShortName">iSout</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/UART_TX/iTx2">
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/u_uart/UART_TX/iTx2">
       <obj_property name="ElementShortName">iTx2</obj_property>
       <obj_property name="ObjectShortName">iTx2</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/UART_TX/STB">
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/u_uart/UART_TX/STB">
       <obj_property name="ElementShortName">STB</obj_property>
       <obj_property name="ObjectShortName">STB</obj_property>
    </wvobject>
@@ -92,23 +92,23 @@
       <obj_property name="ElementShortName">uart0_rxd</obj_property>
       <obj_property name="ObjectShortName">uart0_rxd</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/test_hbe200/mytop/uart_inst/iLSR">
+   <wvobject type="array" fp_name="/test_hbe200/mytop/u_uart/iLSR">
       <obj_property name="ElementShortName">iLSR[7:0]</obj_property>
       <obj_property name="ObjectShortName">iLSR[7:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/iRXFIFOEmpty">
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/u_uart/iRXFIFOEmpty">
       <obj_property name="ElementShortName">iRXFIFOEmpty</obj_property>
       <obj_property name="ObjectShortName">iRXFIFOEmpty</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/iRXFIFOWrite">
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/u_uart/iRXFIFOWrite">
       <obj_property name="ElementShortName">iRXFIFOWrite</obj_property>
       <obj_property name="ObjectShortName">iRXFIFOWrite</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/iRXFinished">
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/u_uart/iRXFinished">
       <obj_property name="ElementShortName">iRXFinished</obj_property>
       <obj_property name="ObjectShortName">iRXFinished</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/test_hbe200/mytop/uart_inst/UART_RX/SIN">
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/u_uart/UART_RX/SIN">
       <obj_property name="ElementShortName">SIN</obj_property>
       <obj_property name="ObjectShortName">SIN</obj_property>
    </wvobject>
