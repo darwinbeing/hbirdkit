@@ -10,3 +10,6 @@ write_sdf -force hbe200.sdf
 
 # Export the current netlist in verilog format
 write_verilog -mode timesim -force hbe200.v
+
+# Checkpoint the current design
+write_checkpoint -force post_bitstream
