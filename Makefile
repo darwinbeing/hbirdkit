@@ -90,7 +90,7 @@ post_route.dcp: post_place.dcp
 bitstream: $(proj).bit
 $(proj).bit: post_route.dcp
 	vivado -mode batch -source scripts/vivado_bitstream.tcl -log bitstream_log.txt -nojournal
-	vivado -mode batch -source scripts/vivado_report.tcl -log report_log.txt -nojournal
+	# vivado -mode batch -source scripts/vivado_report.tcl -log report_log.txt -nojournal
 
 program: $(proj).bit $(HW_SERVER)
 	vivado -mode batch -source scripts/vivado_program.tcl -log program_log.txt -nojournal -tclargs "`cat $(HW_SERVER)`"

@@ -23,5 +23,5 @@ set_property -dict { PACKAGE_PIN P20   IOSTANDARD LVCMOS33 } [get_ports { mcu_rs
 
 
 ## UART
-set_property -dict { PACKAGE_PIN R17   IOSTANDARD LVCMOS33 } [get_ports { uart0_txd }]; #IO_L24N_T3_A00_D16_14 Sch=uart0_txd
-set_property -dict { PACKAGE_PIN P16   IOSTANDARD LVCMOS33 } [get_ports { uart0_rxd }]; #IO_L24P_T3_A01_D17_14 Sch=uart0_rxd
+set_property -dict { PACKAGE_PIN R17   IOSTANDARD LVCMOS33 } [get_ports { uart_tx }]; #IO_L24N_T3_A00_D16_14 Sch=uart_tx
+set_property -dict { PACKAGE_PIN P16   IOSTANDARD LVCMOS33 } [get_ports { uart_rx }]; #IO_L24P_T3_A01_D17_14 Sch=uart_rx
