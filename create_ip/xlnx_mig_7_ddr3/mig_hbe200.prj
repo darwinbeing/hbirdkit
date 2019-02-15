@@ -18,7 +18,7 @@
     <dci_hr_inouts_inputs>50 Ohms</dci_hr_inouts_inputs>
     <dci_cascade>0</dci_cascade>
     <Controller number="0" >
-        <MemoryDevice>DDR3_SDRAM/Components/MT41K256M16XX-125</MemoryDevice>
+        <MemoryDevice>DDR3_SDRAM/Components/MT41J128M16XX-125</MemoryDevice>
         <TimePeriod>2500</TimePeriod>
         <VccAuxIO>1.8V</VccAuxIO>
         <PHYRatio>4:1</PHYRatio>
@@ -35,10 +35,10 @@
         <DataMask>1</DataMask>
         <ECC>Disabled</ECC>
         <Ordering>Normal</Ordering>
-        <BankMachineCnt>8</BankMachineCnt>
-        <CustomPart>FALSE</CustomPart>
-        <NewPartName></NewPartName>
-        <RowAddress>15</RowAddress>
+        <BankMachineCnt>4</BankMachineCnt>
+        <CustomPart>TRUE</CustomPart>
+        <NewPartName>MT41K128M16XX-125K</NewPartName>
+        <RowAddress>14</RowAddress>
         <ColAddress>10</ColAddress>
         <BankAddress>3</BankAddress>
         <MemoryVoltage>1.5V</MemoryVoltage>
@@ -49,7 +49,6 @@
             <Pin VCCAUX_IO="" IOSTANDARD="SSTL15" PADName="W2" SLEW="FAST" name="ddr3_addr[11]" IN_TERM="" />
             <Pin VCCAUX_IO="" IOSTANDARD="SSTL15" PADName="Y2" SLEW="FAST" name="ddr3_addr[12]" IN_TERM="" />
             <Pin VCCAUX_IO="" IOSTANDARD="SSTL15" PADName="U1" SLEW="FAST" name="ddr3_addr[13]" IN_TERM="" />
-            <Pin VCCAUX_IO="" IOSTANDARD="SSTL15" PADName="V3" SLEW="FAST" name="ddr3_addr[14]" IN_TERM="" />
             <Pin VCCAUX_IO="" IOSTANDARD="SSTL15" PADName="AB2" SLEW="FAST" name="ddr3_addr[1]" IN_TERM="" />
             <Pin VCCAUX_IO="" IOSTANDARD="SSTL15" PADName="AA5" SLEW="FAST" name="ddr3_addr[2]" IN_TERM="" />
             <Pin VCCAUX_IO="" IOSTANDARD="SSTL15" PADName="AB5" SLEW="FAST" name="ddr3_addr[3]" IN_TERM="" />
@@ -122,7 +121,7 @@
             <Pin PADName="No connect" Bank="Select Bank" name="tg_compare_error" />
         </System_Control>
         <TimingParameters>
-            <Parameters twtr="7.5" trrd="7.5" trefi="7.8" tfaw="40" trtp="7.5" tcke="5" trfc="260" trp="13.75" tras="35" trcd="13.75" />
+            <Parameters twtr="7.5" trrd="7.5" trefi="7.8" tfaw="40" trtp="7.5" tcke="5" trfc="160" trp="13.75" tras="35" trcd="13.75" />
         </TimingParameters>
         <mrBurstLength name="Burst Length" >8 - Fixed</mrBurstLength>
         <mrBurstType name="Read Burst Type and Length" >Sequential</mrBurstType>

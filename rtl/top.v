@@ -7,7 +7,7 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
            );
 
    localparam DATA_WIDTH = 32;
-   localparam ADDR_WIDTH = 29;
+   localparam ADDR_WIDTH = 28;
    localparam DDR_DQ_WIDTH = 32;
    localparam DDR_DQS_WIDTH = 4;
    localparam DDR_MASK_WIDTH = 32;
@@ -60,7 +60,7 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
    inout [DDR_DQ_WIDTH-1:0] ddr3_dq;
    inout [DDR_DQS_WIDTH-1:0]  ddr3_dqs_n;
    inout [DDR_DQS_WIDTH-1:0]  ddr3_dqs_p;
-   output [14:0] ddr3_addr;
+   output [13:0] ddr3_addr;
    output [2:0]  ddr3_ba;
    output        ddr3_ras_n;
    output        ddr3_cas_n;
