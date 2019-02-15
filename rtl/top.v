@@ -6,6 +6,17 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
            ddr3_cs_n, ddr3_dm, ddr3_odt
            );
 
+   localparam DATA_WIDTH = 32;
+   localparam ADDR_WIDTH = 29;
+   localparam DDR_DQ_WIDTH = 32;
+   localparam DDR_DQS_WIDTH = 4;
+   localparam DDR_MASK_WIDTH = 32;
+
+   localparam APP_ADDR_WIDTH = 29;
+   localparam nCK_PER_CLK = 4;
+   localparam APP_DATA_WIDTH        = 2 * nCK_PER_CLK * DATA_WIDTH;
+   localparam APP_MASK_WIDTH        = APP_DATA_WIDTH / 8;
+
    localparam  STATE_UART_CFG_IDLE         = 0;
    localparam  STATE_UART_CFG_1            = 1;
    localparam  STATE_UART_CFG_2            = 2;
@@ -20,7 +31,6 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
    localparam  STATE_UART_DATA_WAIT         = 11;
    localparam  STATE_UART_WRITE_DATA        = 12;
    localparam  STATE_UART_LOOP              = 13;
-
    localparam UART_RX  = 3'b000;
    localparam UART_TX  = 3'b000;
    localparam UART_IER = 3'b001;
@@ -30,10 +40,8 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
    localparam UART_LSR = 3'b101;
    localparam UART_MSR = 3'b110;
    localparam UART_SCR = 3'b111;
-
    localparam UART_DLL = 3'b000;
    localparam UART_DLM = 3'b001;
-
    localparam UART_MCR_LOOP  = 8'h10;
    localparam UART_LSR_DR    = 8'h01;
    localparam UART_LSR_THRE  = 8'h20;
@@ -49,9 +57,9 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
    input  uart_rx;
    output uart_tx;
 
-   inout [31:0] ddr3_dq;
-   inout [3:0]  ddr3_dqs_n;
-   inout [3:0]  ddr3_dqs_p;
+   inout [DDR_DQ_WIDTH-1:0] ddr3_dq;
+   inout [DDR_DQS_WIDTH-1:0]  ddr3_dqs_n;
+   inout [DDR_DQS_WIDTH-1:0]  ddr3_dqs_p;
    output [14:0] ddr3_addr;
    output [2:0]  ddr3_ba;
    output        ddr3_ras_n;
@@ -62,17 +70,17 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
    output        ddr3_ck_n;
    output        ddr3_cke;
    output        ddr3_cs_n;
-   output [3:0]  ddr3_dm;
+   output [DDR_DQS_WIDTH-1:0] ddr3_dm;
    output        ddr3_odt;
 
-   reg [28:0]    app_addr;
+   reg [APP_ADDR_WIDTH-1:0]    app_addr;
    reg [2:0]     app_cmd;
    (* keep = "true" *) reg app_en;
-   (* keep = "true" *) reg [255:0]app_wdf_data;
+   (* keep = "true" *) reg [APP_DATA_WIDTH-1:0]app_wdf_data;
    wire          app_wdf_end = 1;
-   wire [31:0]   app_wdf_mask = 0;
+   wire [APP_MASK_WIDTH-1:0]   app_wdf_mask = 0;
    (* keep = "true" *) reg app_wdf_wren;
-   (* keep = "true" *) wire [255:0]app_rd_data;
+   (* keep = "true" *) wire [APP_DATA_WIDTH-1:0]app_rd_data;
    wire          app_rd_data_end;
    (* keep = "true" *) wire app_rd_data_valid;
    (* keep = "true" *) wire app_rdy;
@@ -86,15 +94,16 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
    (* keep = "true" *) wire ui_clk;
    wire          ui_clk_sync_rst;
    (* keep = "true" *) wire calib_done;
-   reg [255:0]   data_to_write = {32'hcafebabe, 32'h12345678, 32'hAA55AA55, 32'h55AA55AA, 32'hdeadbeef, 32'h87654321, 32'h55AA55AA, 32'hAA55AA55};
-   reg [255:0]   data_read_from_memory = 256'd0;
+   reg [APP_DATA_WIDTH-1:0]   data_to_write = {32'hcafebabe, 32'h12345678, 32'hAA55AA55, 32'h55AA55AA, 32'hdeadbeef, 32'h87654321, 32'h55AA55AA, 32'hAA55AA55};
+   reg [APP_DATA_WIDTH-1:0]   data_read_from_memory = 'h0;
+   // reg [APP_DATA_WIDTH-1:0]   data_read_from_memory = {APP_DATA_WIDTH{1'b0}};
 
    reg           led_pass;
    reg           led_fail;
    wire          led_calib;
 
    wire          rstn;
-   (* keep = "true" *) wire          clk_50m;
+   (* keep = "true" *) wire clk_50m;
    wire          clk_33m;
    wire          clk_200m;
    wire          pll_locked;
@@ -435,8 +444,8 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
            end
            PARK: begin
               if (data_to_write == data_read_from_memory) begin
-                 app_addr <= app_addr + 256;
-                 data_to_write[255:0] <= {data_to_write[247:0], data_to_write[255:248]};
+                 app_addr <= app_addr + APP_DATA_WIDTH;
+                 data_to_write[APP_DATA_WIDTH-1:0] <= {data_to_write[247:0], data_to_write[255:248]};
                  state <= WRITE;
                  if(app_addr == 0) begin
                     led_pass <= ~led_pass;
