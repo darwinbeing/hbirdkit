@@ -1,5 +1,5 @@
-# set_property MARK_DEBUG true [get_nets clk_33m]
-# set_property MARK_DEBUG true [get_nets CLK100MHZ_IBUF]
+# set_property MARK_DEBUG true [get_nets ui_clk]
+# set_property MARK_DEBUG true [get_nets clk_200m]
 # set_property MARK_DEBUG true [get_nets {u_uart/A[1]}]
 # set_property MARK_DEBUG true [get_nets {u_uart/A[2]}]
 # set_property MARK_DEBUG true [get_nets {u_uart/A[0]}]
@@ -25,11 +25,11 @@
 # set_property C_TRIGIN_EN false [get_debug_cores u_ila_0]
 # set_property C_TRIGOUT_EN false [get_debug_cores u_ila_0]
 # set_property port_width 1 [get_debug_ports u_ila_0/clk]
-# connect_debug_port u_ila_0/clk [get_nets [list CLK100MHZ_IBUF]]
+# connect_debug_port u_ila_0/clk [get_nets [list clk_200m]]
 
 # set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe0]
 # set_property port_width 1 [get_debug_ports u_ila_0/probe0]
-# connect_debug_port u_ila_0/probe0 [get_nets [list clk_33m]]
+# connect_debug_port u_ila_0/probe0 [get_nets [list ui_clk]]
 
 # create_debug_port u_ila_0 probe
 # set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe1]
@@ -59,7 +59,7 @@
 # set_property C_CLK_INPUT_FREQ_HZ 300000000 [get_debug_cores dbg_hub]
 # set_property C_ENABLE_CLK_DIVIDER false [get_debug_cores dbg_hub]
 # set_property C_USER_SCAN_CHAIN 1 [get_debug_cores dbg_hub]
-# connect_debug_port dbg_hub/clk [get_nets CLK100MHZ_IBUF]
+# connect_debug_port dbg_hub/clk [get_nets clk_200m]
 
 
 set_property MARK_DEBUG true [get_nets {app_rd_data[230]}]
@@ -594,7 +594,7 @@ set_property C_INPUT_PIPE_STAGES 0 [get_debug_cores u_ila_0]
 set_property C_TRIGIN_EN false [get_debug_cores u_ila_0]
 set_property C_TRIGOUT_EN false [get_debug_cores u_ila_0]
 set_property port_width 1 [get_debug_ports u_ila_0/clk]
-connect_debug_port u_ila_0/clk [get_nets [list u_clk/inst/clk_out3]]
+connect_debug_port u_ila_0/clk [get_nets [list u_clk/inst/clk_out1]]
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe0]
 set_property port_width 256 [get_debug_ports u_ila_0/probe0]
 connect_debug_port u_ila_0/probe0 [get_nets [list {app_rd_data[0]} {app_rd_data[1]} {app_rd_data[2]} {app_rd_data[3]} {app_rd_data[4]} {app_rd_data[5]} {app_rd_data[6]} {app_rd_data[7]} {app_rd_data[8]} {app_rd_data[9]} {app_rd_data[10]} {app_rd_data[11]} {app_rd_data[12]} {app_rd_data[13]} {app_rd_data[14]} {app_rd_data[15]} {app_rd_data[16]} {app_rd_data[17]} {app_rd_data[18]} {app_rd_data[19]} {app_rd_data[20]} {app_rd_data[21]} {app_rd_data[22]} {app_rd_data[23]} {app_rd_data[24]} {app_rd_data[25]} {app_rd_data[26]} {app_rd_data[27]} {app_rd_data[28]} {app_rd_data[29]} {app_rd_data[30]} {app_rd_data[31]} {app_rd_data[32]} {app_rd_data[33]} {app_rd_data[34]} {app_rd_data[35]} {app_rd_data[36]} {app_rd_data[37]} {app_rd_data[38]} {app_rd_data[39]} {app_rd_data[40]} {app_rd_data[41]} {app_rd_data[42]} {app_rd_data[43]} {app_rd_data[44]} {app_rd_data[45]} {app_rd_data[46]} {app_rd_data[47]} {app_rd_data[48]} {app_rd_data[49]} {app_rd_data[50]} {app_rd_data[51]} {app_rd_data[52]} {app_rd_data[53]} {app_rd_data[54]} {app_rd_data[55]} {app_rd_data[56]} {app_rd_data[57]} {app_rd_data[58]} {app_rd_data[59]} {app_rd_data[60]} {app_rd_data[61]} {app_rd_data[62]} {app_rd_data[63]} {app_rd_data[64]} {app_rd_data[65]} {app_rd_data[66]} {app_rd_data[67]} {app_rd_data[68]} {app_rd_data[69]} {app_rd_data[70]} {app_rd_data[71]} {app_rd_data[72]} {app_rd_data[73]} {app_rd_data[74]} {app_rd_data[75]} {app_rd_data[76]} {app_rd_data[77]} {app_rd_data[78]} {app_rd_data[79]} {app_rd_data[80]} {app_rd_data[81]} {app_rd_data[82]} {app_rd_data[83]} {app_rd_data[84]} {app_rd_data[85]} {app_rd_data[86]} {app_rd_data[87]} {app_rd_data[88]} {app_rd_data[89]} {app_rd_data[90]} {app_rd_data[91]} {app_rd_data[92]} {app_rd_data[93]} {app_rd_data[94]} {app_rd_data[95]} {app_rd_data[96]} {app_rd_data[97]} {app_rd_data[98]} {app_rd_data[99]} {app_rd_data[100]} {app_rd_data[101]} {app_rd_data[102]} {app_rd_data[103]} {app_rd_data[104]} {app_rd_data[105]} {app_rd_data[106]} {app_rd_data[107]} {app_rd_data[108]} {app_rd_data[109]} {app_rd_data[110]} {app_rd_data[111]} {app_rd_data[112]} {app_rd_data[113]} {app_rd_data[114]} {app_rd_data[115]} {app_rd_data[116]} {app_rd_data[117]} {app_rd_data[118]} {app_rd_data[119]} {app_rd_data[120]} {app_rd_data[121]} {app_rd_data[122]} {app_rd_data[123]} {app_rd_data[124]} {app_rd_data[125]} {app_rd_data[126]} {app_rd_data[127]} {app_rd_data[128]} {app_rd_data[129]} {app_rd_data[130]} {app_rd_data[131]} {app_rd_data[132]} {app_rd_data[133]} {app_rd_data[134]} {app_rd_data[135]} {app_rd_data[136]} {app_rd_data[137]} {app_rd_data[138]} {app_rd_data[139]} {app_rd_data[140]} {app_rd_data[141]} {app_rd_data[142]} {app_rd_data[143]} {app_rd_data[144]} {app_rd_data[145]} {app_rd_data[146]} {app_rd_data[147]} {app_rd_data[148]} {app_rd_data[149]} {app_rd_data[150]} {app_rd_data[151]} {app_rd_data[152]} {app_rd_data[153]} {app_rd_data[154]} {app_rd_data[155]} {app_rd_data[156]} {app_rd_data[157]} {app_rd_data[158]} {app_rd_data[159]} {app_rd_data[160]} {app_rd_data[161]} {app_rd_data[162]} {app_rd_data[163]} {app_rd_data[164]} {app_rd_data[165]} {app_rd_data[166]} {app_rd_data[167]} {app_rd_data[168]} {app_rd_data[169]} {app_rd_data[170]} {app_rd_data[171]} {app_rd_data[172]} {app_rd_data[173]} {app_rd_data[174]} {app_rd_data[175]} {app_rd_data[176]} {app_rd_data[177]} {app_rd_data[178]} {app_rd_data[179]} {app_rd_data[180]} {app_rd_data[181]} {app_rd_data[182]} {app_rd_data[183]} {app_rd_data[184]} {app_rd_data[185]} {app_rd_data[186]} {app_rd_data[187]} {app_rd_data[188]} {app_rd_data[189]} {app_rd_data[190]} {app_rd_data[191]} {app_rd_data[192]} {app_rd_data[193]} {app_rd_data[194]} {app_rd_data[195]} {app_rd_data[196]} {app_rd_data[197]} {app_rd_data[198]} {app_rd_data[199]} {app_rd_data[200]} {app_rd_data[201]} {app_rd_data[202]} {app_rd_data[203]} {app_rd_data[204]} {app_rd_data[205]} {app_rd_data[206]} {app_rd_data[207]} {app_rd_data[208]} {app_rd_data[209]} {app_rd_data[210]} {app_rd_data[211]} {app_rd_data[212]} {app_rd_data[213]} {app_rd_data[214]} {app_rd_data[215]} {app_rd_data[216]} {app_rd_data[217]} {app_rd_data[218]} {app_rd_data[219]} {app_rd_data[220]} {app_rd_data[221]} {app_rd_data[222]} {app_rd_data[223]} {app_rd_data[224]} {app_rd_data[225]} {app_rd_data[226]} {app_rd_data[227]} {app_rd_data[228]} {app_rd_data[229]} {app_rd_data[230]} {app_rd_data[231]} {app_rd_data[232]} {app_rd_data[233]} {app_rd_data[234]} {app_rd_data[235]} {app_rd_data[236]} {app_rd_data[237]} {app_rd_data[238]} {app_rd_data[239]} {app_rd_data[240]} {app_rd_data[241]} {app_rd_data[242]} {app_rd_data[243]} {app_rd_data[244]} {app_rd_data[245]} {app_rd_data[246]} {app_rd_data[247]} {app_rd_data[248]} {app_rd_data[249]} {app_rd_data[250]} {app_rd_data[251]} {app_rd_data[252]} {app_rd_data[253]} {app_rd_data[254]} {app_rd_data[255]}]]
@@ -630,11 +630,6 @@ create_debug_port u_ila_0 probe
 set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe8]
 set_property port_width 1 [get_debug_ports u_ila_0/probe8]
 connect_debug_port u_ila_0/probe8 [get_nets [list ui_clk]]
-
-create_debug_port u_ila_0 probe
-set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe9]
-set_property port_width 1 [get_debug_ports u_ila_0/probe9]
-connect_debug_port u_ila_0/probe9 [get_nets [list clk_50m]]
 
 set_property C_CLK_INPUT_FREQ_HZ 300000000 [get_debug_cores dbg_hub]
 set_property C_ENABLE_CLK_DIVIDER false [get_debug_cores dbg_hub]

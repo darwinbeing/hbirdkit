@@ -12,7 +12,7 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
    localparam DDR_DQS_WIDTH = 4;
    localparam DDR_MASK_WIDTH = 32;
 
-   localparam APP_ADDR_WIDTH = 29;
+   localparam APP_ADDR_WIDTH = 28;
    localparam nCK_PER_CLK = 4;
    localparam APP_DATA_WIDTH        = 2 * nCK_PER_CLK * DATA_WIDTH;
    localparam APP_MASK_WIDTH        = APP_DATA_WIDTH / 8;
@@ -103,8 +103,6 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
    wire          led_calib;
 
    wire          rstn;
-   (* keep = "true" *) wire clk_50m;
-   wire          clk_33m;
    wire          clk_200m;
    wire          pll_locked;
    reg           tx_data_avail;
@@ -132,9 +130,7 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
 
    xlnx_clk_gen u_clk
      (
-      .clk_out1(clk_50m),
-      .clk_out2(clk_33m),
-      .clk_out3(clk_200m),
+      .clk_out1(clk_200m),
       .resetn(resetn),
       .locked(pll_locked),
       .clk_in1(CLK100MHZ_IBUF));
@@ -182,7 +178,7 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
 
    uart_16750 u_uart
      (
-      .clk(clk_33m),
+      .clk(ui_clk),
       .rst(~resetn),
       .baudce(1'b1),
       .cs(s_uart_cs),
@@ -207,7 +203,7 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
       .sout(uart_tx));
 
    // 115200 8N1 FIFO(8) INT
-   always @ (posedge clk_33m or negedge resetn) begin
+   always @ (posedge ui_clk or negedge resetn) begin
       if (~resetn) begin
          current_state <= STATE_UART_CFG_IDLE;
       end else begin
@@ -241,7 +237,7 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
            STATE_UART_CFG_2: begin
               if(~s_uart_cs) begin
                  s_uart_addr <= UART_DLL;
-                 s_uart_in <= 8'h11;
+                 s_uart_in <= 8'h35;
                  s_uart_cs <= 1'b1;
               end else if(~s_wr_en) begin
                  s_wr_en <= 1'b1;

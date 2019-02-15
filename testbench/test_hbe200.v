@@ -40,13 +40,13 @@ module test_hbe200();
         #((`CLOCK_PERIOD)/2) CLK100MHZ <= ~CLK100MHZ;
      end
 
-   top mytop(CLK100MHZ,
-             fpga_rst,
-             mcu_rst,
-             led_pass,
-             led_fail,
-             led_calib,
-             uart_rx,
-             uart_tx);
+   top mytop(.CLK100MHZ(CLK100MHZ),
+             .fpga_rst(fpga_rst),
+             .mcu_rst(mcu_rst),
+             .led_pass(led_fail),
+             .led_fail(led_fail),
+             .led_calib(led_calib),
+             .uart_rx(uart_rx),
+             .uart_tx(uart_tx));
 
 endmodule

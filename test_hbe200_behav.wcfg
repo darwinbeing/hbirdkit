@@ -20,9 +20,9 @@
       <ValueColumnWidth column_width="102"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="23" />
-   <wvobject type="logic" fp_name="/test_hbe200/CLK100MHZ">
-      <obj_property name="ElementShortName">CLK100MHZ</obj_property>
-      <obj_property name="ObjectShortName">CLK100MHZ</obj_property>
+   <wvobject type="logic" fp_name="/test_hbe200/clk_200m">
+      <obj_property name="ElementShortName">clk_200m</obj_property>
+      <obj_property name="ObjectShortName">clk_200m</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/test_hbe200/mytop/pll_locked">
       <obj_property name="ElementShortName">pll_locked</obj_property>
@@ -32,9 +32,9 @@
       <obj_property name="ElementShortName">rstn</obj_property>
       <obj_property name="ObjectShortName">rstn</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/test_hbe200/mytop/clk_33m">
-      <obj_property name="ElementShortName">clk_33m</obj_property>
-      <obj_property name="ObjectShortName">clk_33m</obj_property>
+   <wvobject type="logic" fp_name="/test_hbe200/mytop/ui_clk">
+      <obj_property name="ElementShortName">ui_clk</obj_property>
+      <obj_property name="ObjectShortName">ui_clk</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/test_hbe200/mytop/s_uart_cs">
       <obj_property name="ElementShortName">s_uart_cs</obj_property>
