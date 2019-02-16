@@ -455,7 +455,7 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
            PARK: begin
               if (data_to_write == data_read_from_memory) begin
                  app_addr <= app_addr + APP_DATA_WIDTH;
-                 data_to_write[APP_DATA_WIDTH-1:0] <= {data_to_write[247:0], data_to_write[255:248]};
+                 data_to_write[APP_DATA_WIDTH-1:0] <= {data_to_write[APP_DATA_WIDTH-9:0], data_to_write[APP_DATA_WIDTH-1:APP_DATA_WIDTH-8]};
                  state <= WRITE;
                  if(app_addr == 0) begin
                     cnt <= cnt + 1;
