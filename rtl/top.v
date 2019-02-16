@@ -122,6 +122,8 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
    reg            dout_valid;
    reg [7:0]      uart_reg_lsr;
 
+   reg [31:0]     cnt = 0;
+
    assign resetn = fpga_rst & mcu_rst;
 
    IBUF CLK100MHZ_IBUF_inst
@@ -210,8 +212,8 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
          case (current_state)
            STATE_UART_CFG_IDLE: begin
 
-              TxMsgBuf      <= "Command Format\r\n";  // Align to 16 character format by appending space character
-              TxMsgSize     <= 16;
+              TxMsgBuf      <= "Command Format\r\n";
+              TxMsgSize     <= 0;
               tx_data_avail <= 1;
 
               s_uart_in <= 8'h00;
@@ -321,18 +323,30 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
                  if(uart_reg_lsr & UART_LSR_DR)
                    current_state <= STATE_UART_READ_DATA;
                  else if(uart_reg_lsr & UART_LSR_THRE) begin
-                    tx_data_avail    <= 1;
-                    tx_data          <= TxMsgBuf[16*8-1:15*8];
-                    if(TxMsgSize == 0) begin
-                       TxMsgBuf      <= "Command Format\r\n";
-                       TxMsgSize     <= 16;
-                    end else begin
-                       TxMsgBuf      <= TxMsgBuf << 8;
-                       TxMsgSize     <= TxMsgSize -1;
+                    if(app_addr == 0) begin
+                       TxMsgBuf[16*8-1:15*8] <= hex2char(cnt[31:28]);
+                       TxMsgBuf[15*8-1:14*8] <= hex2char(cnt[27:24]);
+                       TxMsgBuf[14*8-1:13*8] <= hex2char(cnt[23:20]);
+                       TxMsgBuf[13*8-1:12*8] <= hex2char(cnt[19:16]);
+                       TxMsgBuf[12*8-1:11*8] <= hex2char(cnt[15:12]);
+                       TxMsgBuf[11*8-1:10*8] <= hex2char(cnt[11:8]);
+                       TxMsgBuf[10*8-1:9*8]  <= hex2char(cnt[7:4]);
+                       TxMsgBuf[9*8-1:8*8]   <= hex2char(cnt[3:0]);
+                       TxMsgBuf[8*8-1:7*8]   <= "\r";
+                       TxMsgBuf[7*8-1:6*8]   <= "\n";
+                       TxMsgSize     <= 10;
                     end
-                    current_state <= STATE_UART_WRITE_DATA;
-                 end
+                    if(TxMsgSize > 0) begin
+                       tx_data_avail    <= 1;
+                       tx_data          <= TxMsgBuf[16*8-1:15*8];
 
+                       TxMsgBuf      <= TxMsgBuf << 8;
+                       TxMsgSize     <= TxMsgSize - 1;
+                       current_state <= STATE_UART_WRITE_DATA;
+                    end else begin
+                       tx_data_avail    <= 0;
+                    end
+                 end
               end
            end
            STATE_UART_READ_DATA: begin
@@ -444,6 +458,7 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
                  data_to_write[APP_DATA_WIDTH-1:0] <= {data_to_write[247:0], data_to_write[255:248]};
                  state <= WRITE;
                  if(app_addr == 0) begin
+                    cnt <= cnt + 1;
                     led_pass <= ~led_pass;
                  end
               end else if (data_to_write != data_read_from_memory) begin
@@ -454,4 +469,27 @@ module top(CLK100MHZ, fpga_rst, mcu_rst, led_pass, led_fail, led_calib, uart_rx,
          endcase
       end
    end
+
+   // Hex to Asci Character
+   function [7:0] hex2char;
+      input [3:0] data_in;
+      case (data_in)
+        4'h0:  hex2char = 8'h30; // character '0'
+        4'h1:  hex2char = 8'h31; // character '1'
+        4'h2:  hex2char = 8'h32; // character '2'
+        4'h3:  hex2char = 8'h33; // character '3'
+        4'h4:  hex2char = 8'h34; // character '4'
+        4'h5:  hex2char = 8'h35; // character '5'
+        4'h6:  hex2char = 8'h36; // character '6'
+        4'h7:  hex2char = 8'h37; // character '7'
+        4'h8:  hex2char = 8'h38; // character '8'
+        4'h9:  hex2char = 8'h39; // character '9'
+        4'hA:  hex2char = 8'h41; // character 'A'
+        4'hB:  hex2char = 8'h42; // character 'B'
+        4'hC:  hex2char = 8'h43; // character 'C'
+        4'hD:  hex2char = 8'h44; // character 'D'
+        4'hE:  hex2char = 8'h45; // character 'E'
+        4'hF:  hex2char = 8'h46; // character 'F'
+      endcase
+   endfunction
 endmodule
